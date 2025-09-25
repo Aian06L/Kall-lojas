@@ -1,0 +1,30 @@
+<header>
+    <div class="logo-tipo">
+        <h1>Fera</h1>
+    </div>
+
+    <nav>
+        <ul>
+            <li (click)="scrollToSection('ofertas')">
+                Ofertas
+            </li>
+            <li (click)="scrollToSection('lancamentos')">
+                Lancamentos
+            </li>
+            <li (click)="scrollToSection('masculino')">
+                Homem
+            </li>
+            <li (click)="scrollToSection('feminino')">
+                Mulher
+            </li>
+            <li (click)="scrollToSection('Contato')">
+                Contato
+            </li>
+        </ul>
+    </nav>
+
+    <div class="login">
+        <button (click)="openLoginModal()">Login</button>
+        <button (click)="openRegisterModal()">Cadastrar</button>
+    </div>
+</header>
