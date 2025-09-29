@@ -1,0 +1,52 @@
+.womens-clothing-catalog {
+  padding: 20px;
+}
+
+.womens-clothing-catalog h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #e67e22;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.catalog-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  background-color: #fff;
+  transition: box-shadow 0.3s ease;
+}
+
+.catalog-item:hover {
+  box-shadow: 0 4px 8px rgba(230, 126, 34, 0.3);
+}
+
+.product-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.product-name {
+  font-weight: 600;
+  margin: 10px 0 5px;
+  color: #333;
+}
+
+.product-price {
+  color: #e67e22;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .catalog-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}

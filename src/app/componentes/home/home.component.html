@@ -1,1 +1,10 @@
-<p>home works!</p>
+<section class="womens-clothing-catalog">
+  <h2>Catálogo de Roupas Femininas</h2>
+  <div class="catalog-grid">
+    <div class="catalog-item" *ngFor="let product of womensClothingCatalog">
+      <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+      <h3 class="product-name">{{ product.name }}</h3>
+      <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,111 @@
+.mamo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+.logo-container {
+  flex: 1;
+}
+
+.logo-text {
+  color: pink;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  font-size: 24px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.main-nav {
+  flex: 2;
+}
+
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav ul li {
+  margin: 0 15px;
+}
+
+.main-nav ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.main-nav ul li a:hover {
+  color: #e67e22; /* Mamô orange accent */
+}
+
+.user-actions {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-login,
+.btn-register {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 15px;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-login {
+  color: #333;
+  background-color: transparent;
+}
+
+.btn-login:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.btn-register {
+  background-color: transparent;
+  color: #e67e22;
+  border: 1px solid #e67e22;
+}
+
+.btn-register:hover {
+  background-color: #e67e22;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .mamo-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .main-nav ul li {
+    margin: 10px 0;
+  }
+
+  .user-actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+}

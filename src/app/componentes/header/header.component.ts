@@ -1,23 +1,26 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  constructor(private router: Router) {}
 
-openLoginModal() {
- this.router.navigate(['/login']);
-}
-openRegisterModal() {
- this.router.navigate(['/register']);
-}
-scrollToSection(arg0: string) {
+  constructor() { }
 
-}
+  openLoginModal() {
+    // Logic to open login modal
+    console.log('Open login modal');
+  }
+
+  openRegisterModal() {
+    // Logic to open register modal
+    console.log('Open register modal');
+  }
+
+  scrollToSection(section: string): void {
+    // Implement scrolling logic or routing here if needed
+  }
 
 }

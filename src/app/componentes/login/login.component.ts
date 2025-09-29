@@ -1,22 +1,28 @@
 import { Component } from '@angular/core';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
-import { MatButton, MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
 
-  email: string = '';
-  password: string = '';
+  constructor() { }
 
-  onSubmit() {
-    
+  onSubmit(form: any) {
+    const email = form.email;
+    const password = form.password;
+
+    // Simulated account check (replace with real API call)
+    const existingUser = email === 'user@example.com' && password === 'password123';
+
+    if (existingUser) {
+      console.log('Login successful');
+      // Redirect or perform post-login actions here
+    } else {
+      console.log('Account does not exist or invalid credentials');
+      // Show error message to user
+    }
   }
 
 }
