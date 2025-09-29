@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -7,16 +8,16 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   openLoginModal() {
-    // Logic to open login modal
-    console.log('Open login modal');
+    // Navigate to login route
+    this.router.navigate(['/login']);
   }
 
   openRegisterModal() {
-    // Logic to open register modal
-    console.log('Open register modal');
+    // Navigate to register route
+    this.router.navigate(['/register']);
   }
 
   scrollToSection(section: string): void {

@@ -1,5 +1,12 @@
 <section class="womens-clothing-catalog">
   <h2>Catálogo de Roupas Femininas</h2>
+
+  <div class="carousel">
+    <div class="carousel-item" *ngFor="let image of carouselImages">
+      <img [src]="image" alt="Roupas Femininas" />
+    </div>
+  </div>
+
   <div class="catalog-grid">
     <div class="catalog-item" *ngFor="let product of womensClothingCatalog">
       <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
