@@ -1,0 +1,68 @@
+footer {
+  background-color: #f30ea655; /* light pink */
+  padding: 20px 0;
+  font-family: Arial, sans-serif;
+}
+
+.conteiner {
+  display: flex;
+  justify-content: space-around;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.outer, .list-help, .social-media {
+  flex: 1;
+  margin: 0 10px;
+}
+
+.outer h3, .list-help h3, .social-media h3 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.outer a, .list-help a, .social-media a {
+  display: block;
+  color: #333;
+  text-decoration: none;
+  margin: 5px 0;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.outer a:hover, .list-help a:hover, .social-media a:hover {
+  color: #f50af56c; /* orange accent */
+}
+
+.social-media a {
+  font-size: 16px; /* larger for emojis */
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+.copy {
+  text-align: center;
+  padding: 10px 0;
+  color: #666;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .conteiner {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .outer, .list-help, .social-media {
+    margin: 10px 0;
+    text-align: center;
+  }
+}

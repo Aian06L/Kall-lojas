@@ -1,3 +1,7 @@
+<section class="hero-image-section">
+  <img src="https://www.mariafilo.com.br/_next/image?url=https://mariafilo.vtexassets.com/assets/vtex.file-manager-graphql/images/92cd92f2-6e22-4d1b-9efd-0b8e1847f9a2___8af232c851db1f381d0fe1178a1bbd4a.jpg&w=3840&q=90" alt="Roupas Femininas para Escritório">
+</section>
+
 <section class="womens-clothing-catalog">
   <h2>Catálogo de Roupas Femininas</h2>
 
@@ -8,10 +12,17 @@
   </div>
 
   <div class="catalog-grid">
-    <div class="catalog-item" *ngFor="let product of womensClothingCatalog">
+    <div class="catalog-item" *ngFor="let product of filteredCatalog">
+      <div class="favorite-icon" (click)="toggleFavorite(product)">
+        <span [class.favorited]="isFavorite(product)">&#10084;</span>
+      </div>
       <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
       <h3 class="product-name">{{ product.name }}</h3>
       <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+      <div class="actions">
+        <button (click)="addToCart(product)">Adicionar no Carrinho</button>
+        <button (click)="buyNow(product)">Comprar</button>
+      </div>
     </div>
   </div>
 </section>

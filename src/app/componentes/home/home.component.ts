@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ClothingService } from '../../services/clothing.service';
+import { LooksService } from '../../services/looks.service';
+import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class HomeComponent implements OnInit {
   womensClothingCatalog = [
@@ -15,12 +20,44 @@ export class HomeComponent implements OnInit {
   ];
 
   carouselImages: string[] = [];
+  filteredCatalog: any[] = [];
 
-  constructor(private clothingService: ClothingService) { }
+  constructor(private clothingService: ClothingService, private looksService: LooksService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.clothingService.getCarouselImages().subscribe(images => {
       this.carouselImages = images;
     });
+
+    this.route.queryParams.subscribe(params => {
+      const search = params['search'];
+      if (search) {
+        this.filteredCatalog = this.womensClothingCatalog.filter(product =>
+          product.name.toLowerCase().includes(search.toLowerCase())
+        );
+      } else {
+        this.filteredCatalog = this.womensClothingCatalog;
+      }
+    });
+  }
+
+  toggleFavorite(product: any): void {
+    if (this.isFavorite(product)) {
+      this.looksService.removeFavorite(product);
+    } else {
+      this.looksService.addFavorite(product);
+    }
+  }
+
+  isFavorite(product: any): boolean {
+    return this.looksService.isFavorite(product);
+  }
+
+  addToCart(product: any): void {
+    console.log(`Added to cart: ${product.name}`);
+  }
+
+  buyNow(product: any): void {
+    console.log(`Buying now: ${product.name}`);
   }
 }

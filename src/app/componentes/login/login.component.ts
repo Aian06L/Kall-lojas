@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -7,7 +8,7 @@ import { Component } from '@angular/core';
 })
 export class LoginComponent {
 
-  constructor() { }
+  private router = inject(Router);
 
   onSubmit(form: any) {
     const email = form.email;
@@ -19,6 +20,7 @@ export class LoginComponent {
     if (existingUser) {
       console.log('Login successful');
       // Redirect or perform post-login actions here
+      this.router.navigate(['/home']);
     } else {
       console.log('Account does not exist or invalid credentials');
       // Show error message to user
