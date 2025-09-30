@@ -1,4 +1,4 @@
-.mamo-header {
+.kall-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -42,17 +42,54 @@
   color: #333;
   font-weight: 600;
   font-size: 16px;
-  transition: color 0.3s ease;
+  cursor: pointer;
+  transition: 0.3s ;
 }
 
 .main-nav ul li a:hover {
-  color: #e67e22; /* Mamô orange accent */
+  color: #f0009c81; 
 }
 
 .user-actions {
   flex: 1;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+}
+
+.buscar {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.buscar input[type="text"] {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px 0 0 8px;
+  outline: none;
+  width: 180px;
+  transition: border-color 0.3s ease;
+}
+
+.buscar input[type="text"]:focus {
+  border-color: #fc00ce7b;
+}
+
+.btn-buscar {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #f800ca58;
+  background-color: #f30ea655;
+  color: white;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-buscar:hover {
+  background-color: #e80baa78;
 }
 
 .btn-login,
@@ -79,17 +116,15 @@
 
 .btn-register {
   background-color: transparent;
-  color: #e67e22;
-  border: 1px solid #e67e22;
 }
 
 .btn-register:hover {
-  background-color: #e67e22;
+  background-color: #f800ba78;
   color: white;
 }
 
 @media (max-width: 768px) {
-  .mamo-header {
+  .kall-header {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -107,5 +142,21 @@
     width: 100%;
     justify-content: flex-start;
     margin-top: 10px;
+  }
+
+  .buscar {
+    margin-right: 0;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .buscar input[type="text"] {
+    width: 100%;
+    border-radius: 4px;
+  }
+
+  .btn-buscar {
+    width: 100%;
+    border-radius: 4px;
   }
 }
