@@ -1,0 +1,26 @@
+<div class="looks-container">
+  <h1>Looks de Roupas Femininas</h1>
+
+  <div class="filters">
+    <button (click)="clearFilter()" [class.active]="!selectedCategory">Todos</button>
+    <button *ngFor="let category of categories" (click)="onCategoryChange(category)" [class.active]="selectedCategory === category">
+      {{ category }}
+    </button>
+  </div>
+
+  <div class="looks-grid">
+    <div class="look-card" *ngFor="let look of filteredLooks">
+      <div class="favorite-icon" (click)="toggleFavorite(look)">
+        <span [class.favorited]="isFavorite(look)">&#10084;</span>
+      </div>
+      <img [src]="look.image" [alt]="look.name" class="look-image">
+      <h3>{{ look.name }}</h3>
+      <p>{{ look.description }}</p>
+      <span class="category">{{ look.category }}</span>
+      <div class="actions">
+        <button (click)="addToCart(look)">Adicionar no Carrinho</button>
+        <button (click)="buyNow(look)">Comprar</button>
+      </div>
+    </div>
+  </div>
+</div>
