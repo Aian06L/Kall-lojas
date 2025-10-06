@@ -55,78 +55,78 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 15px;
 }
 
-.buscar {
+// Botão de compra
+.btn-purchase {
   display: flex;
   align-items: center;
-  margin-right: 15px;
-}
-
-.buscar input[type="text"] {
-  padding: 6px 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 8px 0 0 8px;
-  outline: none;
-  width: 180px;
-  transition: border-color 0.3s ease;
-}
-
-.buscar input[type="text"]:focus {
-  border-color: #fc00ce7b;
-}
-
-.btn-buscar {
-  padding: 6px 12px;
-  font-size: 14px;
-  border: 1px solid #f800ca58;
-  background-color: #f30ea655;
-  color: white;
-  border-radius: 0 8px 8px 0;
+  justify-content: center;
+  padding: 8px;
+  background-color: transparent;
+  color: #e622c9;
+  border: 2px solid #e622c9;
+  border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  text-decoration: none;
 }
 
-.btn-buscar:hover {
-  background-color: #e80baa78;
+.btn-purchase:hover {
+  background-color: #e622c9;
+  color: white;
+  transform: scale(1.1);
+}
+
+.btn-purchase i {
+  font-size: 18px;
 }
 
 .btn-login,
 .btn-register {
-  border: none;
-  background: none;
+  border: 2px solid #e622c9;
+  background: transparent;
   cursor: pointer;
   font-weight: 600;
-  margin-left: 15px;
   font-size: 14px;
-  padding: 8px 12px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  padding: 8px 16px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .btn-login {
-  color: #333;
-  background-color: transparent;
+  color: #e622c9;
 }
 
 .btn-login:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: #e622c9;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(230, 34, 201, 0.3);
 }
 
 .btn-register {
-  background-color: transparent;
+  color: #e622c9;
 }
 
 .btn-register:hover {
-  background-color: #f800ba78;
+  background-color: #e622c9;
   color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(230, 34, 201, 0.3);
 }
 
 @media (max-width: 768px) {
   .kall-header {
     flex-direction: column;
     align-items: flex-start;
+    padding: 15px;
   }
 
   .main-nav ul {
@@ -141,22 +141,24 @@
   .user-actions {
     width: 100%;
     justify-content: flex-start;
-    margin-top: 10px;
+    margin-top: 15px;
+    gap: 10px;
   }
 
-  .buscar {
-    margin-right: 0;
-    margin-bottom: 10px;
-    width: 100%;
+  .btn-purchase,
+  .btn-cart {
+    width: 35px;
+    height: 35px;
   }
 
-  .buscar input[type="text"] {
-    width: 100%;
-    border-radius: 4px;
+  .btn-purchase i,
+  .btn-cart i {
+    font-size: 16px;
   }
 
-  .btn-buscar {
-    width: 100%;
-    border-radius: 4px;
+  .btn-login,
+  .btn-register {
+    padding: 6px 12px;
+    font-size: 13px;
   }
 }

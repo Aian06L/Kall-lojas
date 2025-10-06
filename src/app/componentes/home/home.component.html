@@ -2,27 +2,380 @@
   <img src="https://www.mariafilo.com.br/_next/image?url=https://mariafilo.vtexassets.com/assets/vtex.file-manager-graphql/images/92cd92f2-6e22-4d1b-9efd-0b8e1847f9a2___8af232c851db1f381d0fe1178a1bbd4a.jpg&w=3840&q=90" alt="Roupas Femininas para Escritório">
 </section>
 
-<section class="womens-clothing-catalog">
-  <h2>Catálogo de Roupas Femininas</h2>
+<div class="clothing-container">
+  <h1>Catálogo de Roupas Femininas</h1>
 
-  <div class="carousel">
-    <div class="carousel-item" *ngFor="let image of carouselImages">
-      <img [src]="image" alt="Roupas Femininas" />
-    </div>
-  </div>
-
-  <div class="catalog-grid">
-    <div class="catalog-item" *ngFor="let product of filteredCatalog">
-      <div class="favorite-icon" (click)="toggleFavorite(product)">
-        <span [class.favorited]="isFavorite(product)">&#10084;</span>
-      </div>
-      <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
-      <h3 class="product-name">{{ product.name }}</h3>
-      <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
-      <div class="actions">
-        <button (click)="addToCart(product)">Adicionar no Carrinho</button>
-        <button (click)="buyNow(product)">Comprar</button>
+  <div class="main-carousel">
+    <div class="carousel-wrapper">
+      <div class="carousel-item" *ngFor="let image of carouselImages">
+        <img [src]="image" alt="Roupas Femininas" />
       </div>
     </div>
   </div>
-</section>
+
+  <!-- Seção de Busca -->
+  <div *ngIf="filteredCatalog.length > 0 && filteredCatalog.length < 40" class="search-results">
+    <h2>Resultados da Busca</h2>
+    <div class="catalog-grid">
+      <div class="catalog-item" *ngFor="let product of filteredCatalog">
+        <div class="favorite-icon" (click)="toggleFavorite(product)">
+          <span [class.favorited]="isFavorite(product)">&#10084;</span>
+        </div>
+        <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+        <p class="product-category">{{ product.category }}</p>
+        <div class="actions">
+          <button (click)="addToCart(product)">Adicionar no Carrinho</button>
+          <button (click)="buyNow(product)">Comprar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categoria: Vestidos -->
+  <div class="category-section" *ngIf="dresses.length > 0">
+    <h2>Vestidos</h2>
+    <div class="carousel-container">
+      <div class="carousel-nav-wrapper">
+        <button class="btn carousel-nav prev" 
+                (click)="scrollCarousel('dresses', -1)" 
+                [disabled]="!canScrollLeft('dresses')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Anterior">
+          <i class="bi bi-arrow-left-circle-fill"></i>
+        </button>
+        <div class="catalog-carousel" #dressesCarousel>
+          <div class="catalog-item" *ngFor="let product of dresses">
+            <div class="favorite-icon" (click)="toggleFavorite(product)">
+              <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
+            </div>
+            <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+            <div class="actions">
+              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                <i class="bi bi-cart-plus me-1"></i>Carrinho
+              </button>
+              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                <i class="bi bi-bag-check me-1"></i>Comprar
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn carousel-nav next" 
+                (click)="scrollCarousel('dresses', 1)" 
+                [disabled]="!canScrollRight('dresses')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Próximo">
+          <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categoria: Blusas -->
+  <div class="category-section" *ngIf="blouses.length > 0">
+    <h2>Blusas</h2>
+    <div class="carousel-container">
+      <div class="carousel-nav-wrapper">
+        <button class="btn carousel-nav prev" 
+                (click)="scrollCarousel('blouses', -1)" 
+                [disabled]="!canScrollLeft('blouses')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Anterior">
+          <i class="bi bi-arrow-left-circle-fill"></i>
+        </button>
+        <div class="catalog-carousel" #blousesCarousel>
+          <div class="catalog-item" *ngFor="let product of blouses">
+            <div class="favorite-icon" (click)="toggleFavorite(product)">
+              <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
+            </div>
+            <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+            <div class="actions">
+              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                <i class="bi bi-cart-plus me-1"></i>Carrinho
+              </button>
+              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                <i class="bi bi-bag-check me-1"></i>Comprar
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn carousel-nav next" 
+                (click)="scrollCarousel('blouses', 1)" 
+                [disabled]="!canScrollRight('blouses')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Próximo">
+          <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categoria: Calças -->
+  <div class="category-section" *ngIf="pants.length > 0">
+    <h2>Calças</h2>
+    <div class="carousel-container">
+      <div class="carousel-nav-wrapper">
+        <button class="btn carousel-nav prev" 
+                (click)="scrollCarousel('pants', -1)" 
+                [disabled]="!canScrollLeft('pants')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Anterior">
+          <i class="bi bi-arrow-left-circle-fill"></i>
+        </button>
+        <div class="catalog-carousel" #pantsCarousel>
+          <div class="catalog-item" *ngFor="let product of pants">
+            <div class="favorite-icon" (click)="toggleFavorite(product)">
+              <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
+            </div>
+            <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+            <div class="actions">
+              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                <i class="bi bi-cart-plus me-1"></i>Carrinho
+              </button>
+              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                <i class="bi bi-bag-check me-1"></i>Comprar
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn carousel-nav next" 
+                (click)="scrollCarousel('pants', 1)" 
+                [disabled]="!canScrollRight('pants')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Próximo">
+          <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categoria: Saias -->
+  <div class="category-section" *ngIf="skirts.length > 0">
+    <h2>Saias</h2>
+    <div class="carousel-container">
+      <div class="carousel-nav-wrapper">
+        <button class="btn carousel-nav prev" 
+                (click)="scrollCarousel('skirts', -1)" 
+                [disabled]="!canScrollLeft('skirts')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Anterior">
+          <i class="bi bi-arrow-left-circle-fill"></i>
+        </button>
+        <div class="catalog-carousel" #skirtsCarousel>
+          <div class="catalog-item" *ngFor="let product of skirts">
+            <div class="favorite-icon" (click)="toggleFavorite(product)">
+              <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
+            </div>
+            <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+            <div class="actions">
+              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                <i class="bi bi-cart-plus me-1"></i>Carrinho
+              </button>
+              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                <i class="bi bi-bag-check me-1"></i>Comprar
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn carousel-nav next" 
+                (click)="scrollCarousel('skirts', 1)" 
+                [disabled]="!canScrollRight('skirts')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Próximo">
+          <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categoria: Escritório -->
+  <div class="category-section" *ngIf="officeClothing.length > 0">
+    <h2>Roupas para Escritório</h2>
+    <div class="carousel-container">
+      <div class="carousel-nav-wrapper">
+        <button class="btn carousel-nav prev" 
+                (click)="scrollCarousel('office', -1)" 
+                [disabled]="!canScrollLeft('office')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Anterior">
+          <i class="bi bi-arrow-left-circle-fill"></i>
+        </button>
+        <div class="catalog-carousel" #officeCarousel>
+          <div class="catalog-item" *ngFor="let product of officeClothing">
+            <div class="favorite-icon" (click)="toggleFavorite(product)">
+              <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
+            </div>
+            <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+            <div class="actions">
+              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                <i class="bi bi-cart-plus me-1"></i>Carrinho
+              </button>
+              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                <i class="bi bi-bag-check me-1"></i>Comprar
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn carousel-nav next" 
+                (click)="scrollCarousel('office', 1)" 
+                [disabled]="!canScrollRight('office')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Próximo">
+          <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categoria: Festa -->
+  <div class="category-section" *ngIf="partyClothing.length > 0">
+    <h2>Roupas para Festa</h2>
+    <div class="carousel-container">
+      <div class="carousel-nav-wrapper">
+        <button class="btn carousel-nav prev" 
+                (click)="scrollCarousel('party', -1)" 
+                [disabled]="!canScrollLeft('party')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Anterior">
+          <i class="bi bi-arrow-left-circle-fill"></i>
+        </button>
+        <div class="catalog-carousel" #partyCarousel>
+          <div class="catalog-item" *ngFor="let product of partyClothing">
+            <div class="favorite-icon" (click)="toggleFavorite(product)">
+              <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
+            </div>
+            <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+            <div class="actions">
+              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                <i class="bi bi-cart-plus me-1"></i>Carrinho
+              </button>
+              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                <i class="bi bi-bag-check me-1"></i>Comprar
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn carousel-nav next" 
+                (click)="scrollCarousel('party', 1)" 
+                [disabled]="!canScrollRight('party')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Próximo">
+          <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categoria: Esporte -->
+  <div class="category-section" *ngIf="sportClothing.length > 0">
+    <h2>Roupas Esportivas</h2>
+    <div class="carousel-container">
+      <div class="carousel-nav-wrapper">
+        <button class="btn carousel-nav prev" 
+                (click)="scrollCarousel('sport', -1)" 
+                [disabled]="!canScrollLeft('sport')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Anterior">
+          <i class="bi bi-arrow-left-circle-fill"></i>
+        </button>
+        <div class="catalog-carousel" #sportCarousel>
+          <div class="catalog-item" *ngFor="let product of sportClothing">
+            <div class="favorite-icon" (click)="toggleFavorite(product)">
+              <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
+            </div>
+            <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+            <div class="actions">
+              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                <i class="bi bi-cart-plus me-1"></i>Carrinho
+              </button>
+              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                <i class="bi bi-bag-check me-1"></i>Comprar
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn carousel-nav next" 
+                (click)="scrollCarousel('sport', 1)" 
+                [disabled]="!canScrollRight('sport')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Próximo">
+          <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categoria: Casual -->
+  <div class="category-section" *ngIf="casualClothing.length > 0">
+    <h2>Roupas Casuais</h2>
+    <div class="carousel-container">
+      <div class="carousel-nav-wrapper">
+        <button class="btn carousel-nav prev" 
+                (click)="scrollCarousel('casual', -1)" 
+                [disabled]="!canScrollLeft('casual')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Anterior">
+          <i class="bi bi-arrow-left-circle-fill"></i>
+        </button>
+        <div class="catalog-carousel" #casualCarousel>
+          <div class="catalog-item" *ngFor="let product of casualClothing">
+            <div class="favorite-icon" (click)="toggleFavorite(product)">
+              <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
+            </div>
+            <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+            <div class="actions">
+              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                <i class="bi bi-cart-plus me-1"></i>Carrinho
+              </button>
+              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                <i class="bi bi-bag-check me-1"></i>Comprar
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn carousel-nav next" 
+                (click)="scrollCarousel('casual', 1)" 
+                [disabled]="!canScrollRight('casual')"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Próximo">
+          <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<app-footer></app-footer>

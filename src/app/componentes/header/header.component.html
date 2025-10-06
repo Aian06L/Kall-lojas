@@ -6,7 +6,6 @@
     <nav class="main-nav">
         <ul>
             <li><a routerLink="/home" [queryParams]="{category: 'Casual'}">Home</a></li>
-            <li><a routerLink="/looks" [queryParams]="{category: 'Escritório'}">Produtos</a></li>
             <li><a routerLink="/sobre">Sobre</a></li>
             <li><a routerLink="/contato">Contato</a></li>
         </ul>
@@ -14,15 +13,22 @@
 
     
     <div class="user-actions">
-        
-    <div class="buscar">
-        <input type="text" placeholder="Buscar..." [(ngModel)]="searchQuery">
-        <button class="btn-buscar" (click)="onSearch()">Buscar</button>
-    </div>
+        <a routerLink="/compra" class="btn-purchase" title="Comprar">
+            <i class="bi bi-bag-plus"></i>
+        </a>
 
-    <app-favoritos></app-favoritos>
+        <a routerLink="/carrinho" class="btn-cart" title="Carrinho">
+            <i class="bi bi-cart3"></i>
+            <span class="cart-count" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
+        </a>
 
-    <button class="btn-login" (click)="openLoginModal()">Entrar</button>
-    <button class="btn-register" (click)="openRegisterModal()">Cadastrar</button>
+        <button class="btn-login" (click)="openLoginModal()">
+            <i class="bi bi-box-arrow-in-right me-1"></i>
+            Entrar
+        </button>
+        <button class="btn-register" (click)="openRegisterModal()">
+            <i class="bi bi-person-plus me-1"></i>
+            Cadastrar
+        </button>
     </div>
 </header>

@@ -1,63 +1,249 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ClothingService } from '../../services/clothing.service';
 import { LooksService } from '../../services/looks.service';
+import { CartService } from '../../services/cart.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FooterComponent } from "../footer/footer.component";
+import { Clothing } from '../../model/clothing.model';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FooterComponent]
 })
-export class HomeComponent implements OnInit {
-  womensClothingCatalog = [
-    { id: 1, name: 'Vestido Floral', price: 149.90, imageUrl: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c' },
-    { id: 2, name: 'Blusa de Seda', price: 89.90, imageUrl: 'https://images.unsplash.com/photo-1521334884684-d80222895322' },
-    { id: 3, name: 'Calça Jeans', price: 129.90, imageUrl: 'https://images.unsplash.com/photo-1514996937319-344454492b37' },
-    { id: 4, name: 'Saia Midi', price: 99.90, imageUrl: 'https://images.unsplash.com/photo-1520975695911-1a1a1a1a1a1a' }
-  ];
+export class HomeComponent implements OnInit, AfterViewInit {
+  // ViewChild para referências dos carrosseis
+  @ViewChild('dressesCarousel') dressesCarousel!: ElementRef;
+  @ViewChild('blousesCarousel') blousesCarousel!: ElementRef;
+  @ViewChild('pantsCarousel') pantsCarousel!: ElementRef;
+  @ViewChild('skirtsCarousel') skirtsCarousel!: ElementRef;
+  @ViewChild('officeCarousel') officeCarousel!: ElementRef;
+  @ViewChild('partyCarousel') partyCarousel!: ElementRef;
+  @ViewChild('sportCarousel') sportCarousel!: ElementRef;
+  @ViewChild('casualCarousel') casualCarousel!: ElementRef;
 
+  // Listas de produtos por categoria
+  casualClothing: Clothing[] = [];
+  officeClothing: Clothing[] = [];
+  partyClothing: Clothing[] = [];
+  sportClothing: Clothing[] = [];
+  skirts: Clothing[] = [];
+  dresses: Clothing[] = [];
+  pants: Clothing[] = [];
+  blouses: Clothing[] = [];
+
+  // Dados gerais
   carouselImages: string[] = [];
-  filteredCatalog: any[] = [];
+  categories: string[] = [];
+  filteredCatalog: Clothing[] = [];
 
-  constructor(private clothingService: ClothingService, private looksService: LooksService, private route: ActivatedRoute) { }
+  // Estado dos carrosseis
+  carouselStates: { [key: string]: { scrollPosition: number } } = {};
+
+  constructor(private clothingService: ClothingService, @Inject(LooksService) private looksService: LooksService, private cartService: CartService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    // Carregar imagens do carrossel
     this.clothingService.getCarouselImages().subscribe(images => {
       this.carouselImages = images;
     });
 
+    // Carregar categorias
+    this.clothingService.getCategories().subscribe(categories => {
+      this.categories = categories;
+    });
+
+    // Carregar produtos por categoria
+    this.loadProductsByCategory();
+
+    // Tratar parâmetros de busca
     this.route.queryParams.subscribe(params => {
-      const search = params['search'];
+      const search = params['q'];
       if (search) {
-        this.filteredCatalog = this.womensClothingCatalog.filter(product =>
-          product.name.toLowerCase().includes(search.toLowerCase())
-        );
+        this.clothingService.searchClothing(search).subscribe(results => {
+          this.filteredCatalog = results;
+        });
       } else {
-        this.filteredCatalog = this.womensClothingCatalog;
+        this.clothingService.getAllClothing().subscribe(products => {
+          this.filteredCatalog = products;
+        });
       }
     });
   }
 
-  toggleFavorite(product: any): void {
+  private loadProductsByCategory(): void {
+    // Carregar produtos por categoria
+    this.clothingService.getClothingByCategory('Casual').subscribe(products => {
+      this.casualClothing = products;
+    });
+
+    this.clothingService.getClothingByCategory('Escritório').subscribe(products => {
+      this.officeClothing = products;
+    });
+
+    this.clothingService.getClothingByCategory('Festa').subscribe(products => {
+      this.partyClothing = products;
+    });
+
+    this.clothingService.getClothingByCategory('Esporte').subscribe(products => {
+      this.sportClothing = products;
+    });
+
+    this.clothingService.getClothingByCategory('Saias').subscribe(products => {
+      this.skirts = products;
+    });
+
+    this.clothingService.getClothingByCategory('Vestidos').subscribe(products => {
+      this.dresses = products;
+    });
+
+    this.clothingService.getClothingByCategory('Calças').subscribe(products => {
+      this.pants = products;
+    });
+
+    this.clothingService.getClothingByCategory('Blusas').subscribe(products => {
+      this.blouses = products;
+    });
+  }
+
+  toggleFavorite(product: Clothing): void {
+    // Converter Clothing para Look para compatibilidade
+    const look = {
+      id: product.id,
+      name: product.name,
+      category: product.category,
+      image: product.imageUrl,
+      description: product.description || ''
+    };
+
     if (this.isFavorite(product)) {
-      this.looksService.removeFavorite(product);
+      this.looksService.removeFavorite(look);
     } else {
-      this.looksService.addFavorite(product);
+      this.looksService.addFavorite(look);
     }
   }
 
-  isFavorite(product: any): boolean {
-    return this.looksService.isFavorite(product);
+  isFavorite(product: Clothing): boolean {
+    const look = {
+      id: product.id,
+      name: product.name,
+      category: product.category,
+      image: product.imageUrl,
+      description: product.description || ''
+    };
+    return this.looksService.isFavorite(look);
   }
 
-  addToCart(product: any): void {
+  addToCart(product: Clothing): void {
+    this.cartService.addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.imageUrl
+    });
     console.log(`Added to cart: ${product.name}`);
   }
 
-  buyNow(product: any): void {
+  buyNow(product: Clothing): void {
     console.log(`Buying now: ${product.name}`);
+  }
+
+  ngAfterViewInit(): void {
+    // Inicializar estado dos carrosseis
+    this.initializeCarouselStates();
+    
+    // Inicializar tooltips Bootstrap
+    this.initializeTooltips();
+    
+    // Adicionar listeners de scroll para atualizar estado dos botões
+    this.setupScrollListeners();
+  }
+
+  private initializeCarouselStates(): void {
+    const categories = ['dresses', 'blouses', 'pants', 'skirts', 'office', 'party', 'sport', 'casual'];
+    categories.forEach(category => {
+      this.carouselStates[category] = { scrollPosition: 0 };
+    });
+  }
+
+  private initializeTooltips(): void {
+    // Inicializar tooltips Bootstrap se disponível
+    if (typeof (window as any).bootstrap !== 'undefined') {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      tooltipTriggerList.forEach(tooltipTriggerEl => {
+        new (window as any).bootstrap.Tooltip(tooltipTriggerEl);
+      });
+    }
+  }
+
+  private setupScrollListeners(): void {
+    const categories = ['dresses', 'blouses', 'pants', 'skirts', 'office', 'party', 'sport', 'casual'];
+    
+    setTimeout(() => {
+      categories.forEach(category => {
+        const carousel = this.getCarouselElement(category);
+        if (carousel) {
+          carousel.addEventListener('scroll', () => {
+            // Debounce para evitar muitas chamadas
+            setTimeout(() => {
+              this.carouselStates[category].scrollPosition = carousel.scrollLeft;
+            }, 50);
+          });
+        }
+      });
+    }, 100);
+  }
+
+  scrollCarousel(category: string, direction: number): void {
+    const carousel = this.getCarouselElement(category);
+    if (!carousel) return;
+
+    // Calcular a largura real do item + gap
+    const firstItem = carousel.querySelector('.catalog-item') as HTMLElement;
+    const itemWidth = firstItem ? firstItem.offsetWidth + 20 : 200; // 20px é o gap
+    const visibleWidth = carousel.clientWidth;
+    const itemsToScroll = Math.floor(visibleWidth / itemWidth) || 1;
+    const scrollAmount = itemWidth * itemsToScroll * direction;
+    
+    carousel.scrollBy({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
+
+    // Atualizar estado após a animação
+    setTimeout(() => {
+      this.carouselStates[category].scrollPosition = carousel.scrollLeft;
+    }, 300);
+  }
+
+  canScrollLeft(category: string): boolean {
+    const carousel = this.getCarouselElement(category);
+    return carousel ? carousel.scrollLeft > 0 : false;
+  }
+
+  canScrollRight(category: string): boolean {
+    const carousel = this.getCarouselElement(category);
+    if (!carousel) return false;
+    
+    // Adicionar uma margem de tolerância de 1px para evitar problemas de arredondamento
+    return carousel.scrollLeft < (carousel.scrollWidth - carousel.clientWidth - 1);
+  }
+
+  private getCarouselElement(category: string): HTMLElement | null {
+    switch (category) {
+      case 'dresses': return this.dressesCarousel?.nativeElement;
+      case 'blouses': return this.blousesCarousel?.nativeElement;
+      case 'pants': return this.pantsCarousel?.nativeElement;
+      case 'skirts': return this.skirtsCarousel?.nativeElement;
+      case 'office': return this.officeCarousel?.nativeElement;
+      case 'party': return this.partyCarousel?.nativeElement;
+      case 'sport': return this.sportCarousel?.nativeElement;
+      case 'casual': return this.casualCarousel?.nativeElement;
+      default: return null;
+    }
   }
 }

@@ -1,6 +1,6 @@
 footer {
-  background-color: #f30ea655; /* light pink */
-  padding: 20px 0;
+  background-color: #f30ea655;
+  padding: 1rem;
   font-family: Arial, sans-serif;
 }
 
@@ -12,19 +12,19 @@ footer {
   padding: 0 20px;
 }
 
-.outer, .list-help, .social-media {
+.outer, .list-help, .about-us, .social-media {
   flex: 1;
   margin: 0 10px;
 }
 
-.outer h3, .list-help h3, .social-media h3 {
+.outer h3, .list-help h3, .about-us h3, .social-media h3 {
   color: #333;
   margin-bottom: 10px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
 }
 
-.outer a, .list-help a, .social-media a {
+.outer a, .list-help a, .about-us a, .social-media a {
   display: block;
   color: #333;
   text-decoration: none;
@@ -33,24 +33,48 @@ footer {
   transition: color 0.3s ease;
 }
 
-.outer a:hover, .list-help a:hover, .social-media a:hover {
+.outer a:hover, .list-help a:hover, .about-us a:hover, .social-media a:hover {
   color: #f50af56c; /* orange accent */
 }
 
 .social-media a {
-  font-size: 16px; /* larger for emojis */
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.social-media a i {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.social-media a:hover i {
+  transform: scale(1.2);
+}
+
+// Cores específicas para cada rede social
+.social-media a:hover i.bi-facebook {
+  color: #1877f2;
+}
+
+.social-media a:hover i.bi-instagram {
+  color: #e4405f;
+}
+
+.social-media a:hover i.bi-tiktok {
+  color: #ff0050;
 }
 
 hr {
   border: none;
   border-top: 1px solid #ccc;
-  margin: 20px auto;
+  margin: 10px auto; /* reduced margin */
   max-width: 1200px;
 }
 
 .copy {
   text-align: center;
-  padding: 10px 0;
   color: #666;
   font-size: 12px;
 }
@@ -61,7 +85,7 @@ hr {
     align-items: center;
   }
 
-  .outer, .list-help, .social-media {
+  .outer, .list-help, .about-us, .social-media {
     margin: 10px 0;
     text-align: center;
   }

@@ -1,18 +1,119 @@
 <div class="register-container">
-  <h2>Crie sua conta</h2>
-  <form>
-    <label for="name">Nome Completo</label>
-    <input type="text" id="name" name="name" placeholder="Digite seu nome completo" required />
-    
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" placeholder="Digite seu email" required />
-    
-    <label for="password">Senha</label>
-    <input type="password" id="password" name="password" placeholder="Crie uma senha" required />
-    
-    <label for="confirmPassword">Confirme a Senha</label>
-    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirme sua senha" required />
-    
-    <button type="submit" class="btn-register">Cadastrar</button>
+  <div class="register-header">
+    <h2>Crie sua conta</h2>
+    <p class="register-subtitle">Cadastre-se para ter acesso completo à nossa loja</p>
+  </div>
+  
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+    <!-- Nome Completo -->
+    <div class="input-group">
+      <label for="name">Nome Completo</label>
+      <div class="input-wrapper">
+        <i class="bi bi-person-fill input-icon"></i>
+        <input 
+          type="text" 
+          id="name" 
+          formControlName="name"
+          placeholder="Digite seu nome completo"
+          [class.error]="isFieldInvalid('name')"
+        />
+      </div>
+      <div class="error-message" *ngIf="isFieldInvalid('name')">
+        {{ getFieldError('name') }}
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="input-group">
+      <label for="email">Email</label>
+      <div class="input-wrapper">
+        <i class="bi bi-envelope-fill input-icon"></i>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email"
+          placeholder="Digite seu email"
+          [class.error]="isFieldInvalid('email')"
+        />
+      </div>
+      <div class="error-message" *ngIf="isFieldInvalid('email')">
+        {{ getFieldError('email') }}
+      </div>
+    </div>
+
+    <!-- Senha -->
+    <div class="input-group">
+      <label for="password">Senha</label>
+      <div class="input-wrapper">
+        <i class="bi bi-lock-fill input-icon"></i>
+        <input 
+          [type]="showPassword ? 'text' : 'password'" 
+          id="password" 
+          formControlName="password"
+          placeholder="Crie uma senha"
+          [class.error]="isFieldInvalid('password')"
+        />
+        <button 
+          type="button" 
+          class="password-toggle"
+          (click)="togglePasswordVisibility('password')"
+        >
+          <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+        </button>
+      </div>
+      <div class="error-message" *ngIf="isFieldInvalid('password')">
+        {{ getFieldError('password') }}
+      </div>
+    </div>
+
+    <!-- Confirmar Senha -->
+    <div class="input-group">
+      <label for="confirmPassword">Confirme a Senha</label>
+      <div class="input-wrapper">
+        <i class="bi bi-lock-fill input-icon"></i>
+        <input 
+          [type]="showConfirmPassword ? 'text' : 'password'" 
+          id="confirmPassword" 
+          formControlName="confirmPassword"
+          placeholder="Confirme sua senha"
+          [class.error]="isFieldInvalid('confirmPassword')"
+        />
+        <button 
+          type="button" 
+          class="password-toggle"
+          (click)="togglePasswordVisibility('confirmPassword')"
+        >
+          <i class="bi" [class.bi-eye]="!showConfirmPassword" [class.bi-eye-slash]="showConfirmPassword"></i>
+        </button>
+      </div>
+      <div class="error-message" *ngIf="isFieldInvalid('confirmPassword')">
+        {{ getFieldError('confirmPassword') }}
+      </div>
+    </div>
+
+    <!-- Botão de Cadastro -->
+    <button 
+      type="submit" 
+      class="btn-register"
+      [disabled]="registerForm.invalid || isSubmitting"
+    >
+      <span *ngIf="!isSubmitting">
+        <i class="bi bi-person-plus me-2"></i>
+        Cadastrar
+      </span>
+      <span *ngIf="isSubmitting">
+        <i class="bi bi-arrow-clockwise spin me-2"></i>
+        Cadastrando...
+      </span>
+    </button>
+
+    <!-- Link para Login -->
+    <div class="login-link">
+      <p>Já tem uma conta? 
+        <button type="button" class="link-button" (click)="navigateToLogin()">
+          Faça login
+        </button>
+      </p>
+    </div>
   </form>
 </div>

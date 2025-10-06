@@ -20,9 +20,9 @@
 
 .filters button {
   padding: 10px 20px;
-  border: 1px solid #e67e22;
+  border: 1px solid #e622c9;
   background-color: white;
-  color: #e67e22;
+  color: #f800ba;
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s, color 0.3s;
@@ -30,7 +30,7 @@
 
 .filters button:hover,
 .filters button.active {
-  background-color: #e67e22;
+  background-color: #e8009b;
   color: white;
 }
 
@@ -64,7 +64,7 @@
 }
 
 .favorite-icon .favorited {
-  color: #e67e22;
+  color: #f800e8;
 }
 
 .look-image {
@@ -89,7 +89,7 @@
   display: block;
   padding: 10px 15px;
   background-color: #f8f8f8;
-  color: #e67e22;
+  color: #f400bbad;
   font-weight: bold;
   text-transform: uppercase;
   font-size: 12px;
@@ -104,7 +104,7 @@
 .actions button {
   padding: 8px 12px;
   border: none;
-  background-color: #e67e22;
+  background-color: #e622bf;
   color: white;
   border-radius: 4px;
   cursor: pointer;
@@ -113,5 +113,5 @@
 }
 
 .actions button:hover {
-  background-color: #cf711b;
+  background-color: #cf1b9f;
 }

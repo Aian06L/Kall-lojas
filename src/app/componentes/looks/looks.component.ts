@@ -12,6 +12,7 @@ import { LooksService, Look } from '../../services/looks.service';
 export class LooksComponent implements OnInit {
   looks: Look[] = [];
   filteredLooks: Look[] = [];
+  skirtsLooks: Look[] = [];
   categories: string[] = [];
   selectedCategory: string = '';
 
@@ -24,6 +25,7 @@ export class LooksComponent implements OnInit {
   ngOnInit(): void {
     this.looks = this.looksService.getLooks();
     this.categories = this.looksService.getCategories();
+    this.skirtsLooks = this.looksService.getLooksByCategory('Saias');
 
     this.route.queryParams.subscribe(params => {
       this.selectedCategory = params['category'] || '';

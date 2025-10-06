@@ -1,14 +1,111 @@
 <div class="login-container">
-  <h1 class="login-brand">Kall</h1>
-  <h2>Entrar na sua conta</h2>
-  <form>
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" placeholder="Digite seu email" required />
-    
-    <label for="password">Senha</label>
-    <input type="password" id="password" name="password" placeholder="Digite sua senha" required />
-    
-    <button type="submit" class="btn-login">Entrar</button>
+  <div class="login-header">
+    <h1 class="login-brand">Kall</h1>
+    <h2>Entrar na sua conta</h2>
+    <p class="login-subtitle">Acesse sua conta para continuar comprando</p>
+  </div>
+
+  <!-- Mensagem de sucesso -->
+  <div class="success-message" *ngIf="showSuccessMessage">
+    <i class="bi bi-check-circle-fill"></i>
+    <span>Login realizado com sucesso! Redirecionando...</span>
+  </div>
+  
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <!-- Erro geral -->
+    <div class="error-alert" *ngIf="loginError">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      {{ loginError }}
+    </div>
+
+    <!-- Email -->
+    <div class="input-group">
+      <label for="email">Email</label>
+      <div class="input-wrapper">
+        <i class="bi bi-envelope-fill input-icon"></i>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email"
+          placeholder="Digite seu email"
+          [class.error]="isFieldInvalid('email')"
+        />
+      </div>
+      <div class="error-message" *ngIf="isFieldInvalid('email')">
+        {{ getFieldError('email') }}
+      </div>
+    </div>
+
+    <!-- Senha -->
+    <div class="input-group">
+      <label for="password">Senha</label>
+      <div class="input-wrapper">
+        <i class="bi bi-lock-fill input-icon"></i>
+        <input 
+          [type]="showPassword ? 'text' : 'password'" 
+          id="password" 
+          formControlName="password"
+          placeholder="Digite sua senha"
+          [class.error]="isFieldInvalid('password')"
+        />
+        <button 
+          type="button" 
+          class="password-toggle"
+          (click)="togglePasswordVisibility()"
+        >
+          <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+        </button>
+      </div>
+      <div class="error-message" *ngIf="isFieldInvalid('password')">
+        {{ getFieldError('password') }}
+      </div>
+    </div>
+
+    <!-- Lembrar-me e Esqueceu a senha -->
+    <div class="form-options">
+      <div class="remember-me">
+        <input 
+          type="checkbox" 
+          id="rememberMe" 
+          formControlName="rememberMe"
+        />
+        <label for="rememberMe">Lembrar-me</label>
+      </div>
+      <button type="button" class="forgot-password-btn" (click)="resetPassword()">
+        Esqueceu a senha?
+      </button>
+    </div>
+
+    <!-- Botão de Login -->
+    <button 
+      type="submit" 
+      class="btn-login"
+      [disabled]="loginForm.invalid || isSubmitting"
+    >
+      <span *ngIf="!isSubmitting">
+        <i class="bi bi-box-arrow-in-right me-2"></i>
+        Entrar
+      </span>
+      <span *ngIf="isSubmitting">
+        <i class="bi bi-arrow-clockwise spin me-2"></i>
+        Entrando...
+      </span>
+    </button>
+
+    <!-- Credenciais de demonstracao -->
+    <div class="demo-credentials">
+      <p><strong>Credenciais de demonstração:</strong></p>
+      <p>Email: <code>user&#64;example.com</code></p>
+      <p>Senha: <code>password</code></p>
+    </div>
+
+    <!-- Link para Cadastro -->
+    <div class="register-link">
+      <p>Não tem uma conta?
+        <button type="button" class="link-button" (click)="navigateToRegister()">
+          Cadastre-se
+        </button>
+      </p>
+    </div>
   </form>
-  <p class="forgot-password"><a href="#">Esqueceu sua senha?</a></p>
 </div>

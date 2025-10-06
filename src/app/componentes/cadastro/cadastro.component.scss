@@ -1,51 +1,256 @@
 .register-container {
-  max-width: 400px;
+  max-width: 450px;
   margin: 40px auto;
-  padding: 30px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #fff;
-  font-family: 'Arial', sans-serif;
+  padding: 40px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #fdf8fd 100%);
+  box-shadow: 0 20px 40px rgba(230, 34, 201, 0.1);
+  font-family: 'Roboto', sans-serif;
+  position: relative;
+  overflow: hidden;
 }
 
-.register-container h2 {
-  margin-bottom: 20px;
-  font-weight: 700;
-  font-size: 24px;
-  color: #000;
+.register-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #e622c9, #f800ba, #e622c9);
+}
+
+.register-header {
   text-align: center;
+  margin-bottom: 35px;
 }
 
-.register-container form {
+.register-header h2 {
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 28px;
+  color: #e622c9;
+}
+
+.register-subtitle {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.register-form {
   display: flex;
   flex-direction: column;
+  gap: 20px;
 }
 
-.register-container label {
-  margin-bottom: 5px;
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
   font-weight: 600;
   color: #333;
+  font-size: 14px;
+  margin: 0;
 }
 
-.register-container input {
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  color: #e622c9;
+  z-index: 2;
+  font-size: 16px;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 14px 15px 14px 45px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.input-wrapper input:focus {
+  outline: none;
+  border-color: #e622c9;
+  box-shadow: 0 0 0 3px rgba(230, 34, 201, 0.1);
+}
+
+.input-wrapper input.error {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.input-wrapper input::placeholder {
+  color: #999;
   font-size: 14px;
 }
 
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+  color: #e622c9;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 12px;
+  margin: 0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.error-message::before {
+  content: '⚠';
+  font-size: 12px;
+}
+
 .btn-register {
-  padding: 12px;
-  background-color: #000;
+  padding: 16px;
+  background: linear-gradient(135deg, #e622c9, #f800ba);
   color: #fff;
   font-weight: 700;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
 }
 
-.btn-register:hover {
-  background-color: #444;
+.btn-register:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(230, 34, 201, 0.3);
+}
+
+.btn-register:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-register:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-register .spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.login-link p {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #e622c9;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.link-button:hover {
+  color: #d01fb5;
+}
+
+// Animações de entrada
+.register-container {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .register-container {
+    margin: 20px;
+    padding: 30px 25px;
+  }
+  
+  .register-header h2 {
+    font-size: 24px;
+  }
+  
+  .input-wrapper input {
+    padding: 12px 12px 12px 40px;
+  }
+  
+  .input-icon {
+    left: 12px;
+  }
+  
+  .password-toggle {
+    right: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    margin: 10px;
+    padding: 25px 20px;
+  }
+  
+  .register-header h2 {
+    font-size: 22px;
+  }
+  
+  .btn-register {
+    padding: 14px;
+    font-size: 15px;
+  }
 }
