@@ -3,32 +3,60 @@
         <h1 class="logo-text">Kall</h1>
     </div>
 
-    <nav class="main-nav">
+    <!-- Menu Hamburger for Mobile -->
+    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <nav class="main-nav" [class.mobile-open]="isMobileMenuOpen">
         <ul>
-            <li><a routerLink="/home" [queryParams]="{category: 'Casual'}">Home</a></li>
-            <li><a routerLink="/sobre">Sobre</a></li>
-            <li><a routerLink="/contato">Contato</a></li>
+            <li><a routerLink="/home" [queryParams]="{category: 'Casual'}" (click)="closeMobileMenu()">Home</a></li>
+            <li><a routerLink="/sobre" (click)="closeMobileMenu()">Sobre</a></li>
+            <li><a routerLink="/contato" (click)="closeMobileMenu()">Contato</a></li>
         </ul>
     </nav>
 
     
-    <div class="user-actions">
-        <a routerLink="/compra" class="btn-purchase" title="Comprar">
-            <i class="bi bi-bag-plus"></i>
-        </a>
-
+    <div class="user-actions" [class.mobile-open]="isMobileMenuOpen">
         <a routerLink="/carrinho" class="btn-cart" title="Carrinho">
             <i class="bi bi-cart3"></i>
             <span class="cart-count" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
         </a>
 
-        <button class="btn-login" (click)="openLoginModal()">
-            <i class="bi bi-box-arrow-in-right me-1"></i>
-            Entrar
-        </button>
-        <button class="btn-register" (click)="openRegisterModal()">
-            <i class="bi bi-person-plus me-1"></i>
-            Cadastrar
-        </button>
+        <!-- Show login/register buttons when not authenticated -->
+        <ng-container *ngIf="!isLoggedIn">
+            <button class="btn-login" (click)="openLoginModal()">
+                <i class="bi bi-box-arrow-in-right me-1"></i>
+                Entrar
+            </button>
+            <button class="btn-register" (click)="openRegisterModal()">
+                <i class="bi bi-person-plus me-1"></i>
+                Cadastrar
+            </button>
+        </ng-container>
+
+        <!-- Show profile dropdown when authenticated -->
+        <div class="profile-dropdown" *ngIf="isLoggedIn">
+            <button class="btn-profile" (click)="toggleProfileDropdown()" [class.active]="isProfileDropdownOpen">
+                <i class="bi bi-person-circle"></i>
+            </button>
+            <div class="dropdown-menu" [class.show]="isProfileDropdownOpen">
+                <a class="dropdown-item" routerLink="/perfil" (click)="closeProfileDropdown()">
+                    <i class="bi bi-person me-2"></i>
+                    Minha Conta
+                </a>
+                <a class="dropdown-item" routerLink="/configuracoes" (click)="closeProfileDropdown()">
+                    <i class="bi bi-gear me-2"></i>
+                    Configurações
+                </a>
+                <hr class="dropdown-divider">
+                <button class="dropdown-item" (click)="logout()">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
     </div>
 </header>

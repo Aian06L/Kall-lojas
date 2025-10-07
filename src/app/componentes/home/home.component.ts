@@ -2,9 +2,8 @@ import { Component, OnInit, Inject, ViewChild, ElementRef, AfterViewInit } from 
 import { ClothingService } from '../../services/clothing.service';
 import { LooksService } from '../../services/looks.service';
 import { CartService } from '../../services/cart.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FooterComponent } from "../footer/footer.component";
 import { Clothing } from '../../model/clothing.model';
 
 @Component({
@@ -12,7 +11,7 @@ import { Clothing } from '../../model/clothing.model';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule, FooterComponent]
+  imports: [CommonModule]
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   // ViewChild para referências dos carrosseis
@@ -42,8 +41,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   // Estado dos carrosseis
   carouselStates: { [key: string]: { scrollPosition: number } } = {};
+  
+  // Modal de pagamento
+  showPaymentModal: boolean = false;
+  currentProduct: Clothing | null = null;
 
-  constructor(private clothingService: ClothingService, @Inject(LooksService) private looksService: LooksService, private cartService: CartService, private route: ActivatedRoute) { }
+  constructor(private clothingService: ClothingService, @Inject(LooksService) private looksService: LooksService, private cartService: CartService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     // Carregar imagens do carrossel
@@ -149,7 +152,78 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   buyNow(product: Clothing): void {
-    console.log(`Buying now: ${product.name}`);
+    this.currentProduct = product;
+    this.showPaymentModal = true;
+  }
+
+  closePaymentModal(): void {
+    this.showPaymentModal = false;
+    this.currentProduct = null;
+  }
+
+  onPaymentComplete(paymentData: any): void {
+    // Processar pagamento concluído
+    console.log('Pagamento concluído:', paymentData);
+    
+    // Mostrar notificação de sucesso
+    this.showSuccessNotification(`Compra realizada com sucesso! Pedido #${paymentData.orderId}`);
+    
+    // Fechar modal
+    this.closePaymentModal();
+  }
+
+  getCurrentProductAsCartItems(): any[] {
+    if (!this.currentProduct) return [];
+    
+    return [{
+      id: this.currentProduct.id,
+      name: this.currentProduct.name,
+      price: this.currentProduct.price,
+      quantity: 1,
+      image: this.currentProduct.imageUrl
+    }];
+  }
+
+  getCurrentProductTotal(): number {
+    return this.currentProduct ? this.currentProduct.price : 0;
+  }
+
+  private showSuccessNotification(message: string): void {
+    const notification = document.createElement('div');
+    notification.className = 'purchase-notification';
+    notification.innerHTML = `
+      <i class="bi bi-check-circle-fill"></i>
+      <span>${message}</span>
+    `;
+    
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      animation: slideInRight 0.3s ease-out;
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.style.animation = 'slideOutRight 0.3s ease-in';
+      setTimeout(() => {
+        if (document.body.contains(notification)) {
+          document.body.removeChild(notification);
+        }
+      }, 300);
+    }, 5000);
   }
 
   ngAfterViewInit(): void {
@@ -246,4 +320,5 @@ export class HomeComponent implements OnInit, AfterViewInit {
       default: return null;
     }
   }
+
 }

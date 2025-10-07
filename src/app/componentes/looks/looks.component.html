@@ -41,3 +41,13 @@
     </div>
   </div>
 </div>
+
+<!-- Modal de Pagamento -->
+<app-pagamento
+  *ngIf="showPaymentModal"
+  [showModal]="showPaymentModal"
+  [items]="getCurrentLookAsCartItems()"
+  [total]="getCurrentLookTotal()"
+  (closeModal)="closePaymentModal()"
+  (paymentComplete)="onPaymentComplete($event)">
+</app-pagamento>

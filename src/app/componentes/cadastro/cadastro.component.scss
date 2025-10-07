@@ -131,6 +131,88 @@
   font-size: 12px;
 }
 
+.lgpd-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkmark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.checkmark::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.2s ease;
+}
+
+input[type="checkbox"]:checked + .checkbox-label .checkmark {
+  background: linear-gradient(135deg, #e622c9, #f800ba);
+  border-color: #e622c9;
+}
+
+input[type="checkbox"]:checked + .checkbox-label .checkmark::after {
+  transform: rotate(45deg) scale(1);
+}
+
+input[type="checkbox"]:focus + .checkbox-label .checkmark {
+  box-shadow: 0 0 0 3px rgba(230, 34, 201, 0.2);
+}
+
+input[type="checkbox"].error + .checkbox-label .checkmark {
+  border-color: #dc3545;
+}
+
+.lgpd-link {
+  color: #e622c9;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.lgpd-link:hover {
+  color: #d01fb5;
+  text-decoration: underline;
+}
+
 .btn-register {
   padding: 16px;
   background: linear-gradient(135deg, #e622c9, #f800ba);
@@ -216,41 +298,171 @@
 }
 
 // Responsividade
+@media (max-width: 992px) {
+  .register-container {
+    max-width: 400px;
+    margin: 30px auto;
+    padding: 35px 30px;
+  }
+}
+
 @media (max-width: 768px) {
   .register-container {
     margin: 20px;
     padding: 30px 25px;
+    max-width: none;
+  }
+  
+  .register-header {
+    margin-bottom: 30px;
   }
   
   .register-header h2 {
     font-size: 24px;
   }
   
+  .register-subtitle {
+    font-size: 13px;
+  }
+  
+  .register-form {
+    gap: 18px;
+  }
+  
   .input-wrapper input {
     padding: 12px 12px 12px 40px;
+    font-size: 13px;
   }
   
   .input-icon {
     left: 12px;
+    font-size: 15px;
   }
   
   .password-toggle {
     right: 12px;
   }
+  
+  .checkbox-label {
+    font-size: 13px;
+  }
+  
+  .checkmark {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .btn-register {
+    padding: 13px;
+    font-size: 15px;
+  }
+  
+  .login-link {
+    margin-top: 18px;
+    padding-top: 18px;
+  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .register-container {
-    margin: 10px;
+    margin: 15px 10px;
     padding: 25px 20px;
+  }
+  
+  .register-header {
+    margin-bottom: 25px;
   }
   
   .register-header h2 {
     font-size: 22px;
   }
   
+  .register-form {
+    gap: 16px;
+  }
+  
+  .input-group {
+    gap: 6px;
+  }
+  
+  .input-wrapper input {
+    padding: 11px 11px 11px 38px;
+  }
+  
+  .input-icon {
+    left: 11px;
+  }
+  
+  .password-toggle {
+    right: 11px;
+  }
+  
+  .checkbox-label {
+    font-size: 12px;
+  }
+  
+  .checkmark {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .lgpd-section {
+    margin: 15px 0;
+  }
+  
   .btn-register {
-    padding: 14px;
-    font-size: 15px;
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .register-container {
+    margin: 10px 5px;
+    padding: 20px 15px;
+  }
+  
+  .register-header h2 {
+    font-size: 20px;
+  }
+  
+  .register-subtitle {
+    font-size: 12px;
+  }
+  
+  .input-wrapper input {
+    padding: 10px 10px 10px 35px;
+    font-size: 12px;
+  }
+  
+  .input-icon {
+    left: 10px;
+    font-size: 14px;
+  }
+  
+  .password-toggle {
+    right: 10px;
+  }
+  
+  .checkbox-label {
+    font-size: 11px;
+  }
+  
+  .checkmark {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .lgpd-section {
+    margin: 12px 0;
+  }
+  
+  .btn-register {
+    padding: 11px;
+    font-size: 13px;
+  }
+  
+  .login-link p {
+    font-size: 13px;
   }
 }

@@ -91,6 +91,25 @@
       </div>
     </div>
 
+    <!-- LGPD Checkbox -->
+    <div class="lgpd-section">
+      <div class="checkbox-group">
+        <input 
+          type="checkbox" 
+          id="lgpdAccepted" 
+          formControlName="lgpdAccepted"
+          [class.error]="isFieldInvalid('lgpdAccepted')"
+        />
+        <label for="lgpdAccepted" class="checkbox-label">
+          <span class="checkmark"></span>
+          Aceito os <a href="#" class="lgpd-link">termos de privacidade e proteção de dados (LGPD)</a>
+        </label>
+      </div>
+      <div class="error-message" *ngIf="isFieldInvalid('lgpdAccepted')">
+        {{ getFieldError('lgpdAccepted') }}
+      </div>
+    </div>
+
     <!-- Botão de Cadastro -->
     <button 
       type="submit" 

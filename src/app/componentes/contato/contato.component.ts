@@ -6,11 +6,12 @@ import { FooterComponent } from "../footer/footer.component";
 @Component({
   selector: 'app-contato',
   template: `
-    <div class="contact-container">
-      <div class="contact-header">
-        <h2>Entre em Contato</h2>
-        <p class="subtitle">Estamos aqui para ajudar você! Preencha o formulário abaixo e responderemos em breve.</p>
-      </div>
+    <div class="contact-wrapper">
+      <div class="contact-container">
+        <div class="contact-header">
+          <h2>Entre em Contato</h2>
+          <p class="subtitle">Estamos aqui para ajudar você! Preencha o formulário abaixo e responderemos em breve.</p>
+        </div>
 
       <div class="contact-content">
         <div class="contact-info">
@@ -195,15 +196,22 @@ import { FooterComponent } from "../footer/footer.component";
           </button>
         </div>
       </div>
+      </div>
     </div>
     <app-footer></app-footer>
   `,
   styles: [`
+    
     :host {
       display: block;
       background: linear-gradient(135deg, #ffeef5 0%, #ffe0f0 100%);
       min-height: 100vh;
-      padding: 40px 20px;
+      padding: 0;
+    }
+
+    .contact-wrapper {
+      padding: 40px 20px 0 20px;
+      min-height: calc(100vh - 200px);
     }
 
     .contact-container {
@@ -531,8 +539,8 @@ import { FooterComponent } from "../footer/footer.component";
     }
 
     @media (max-width: 768px) {
-      :host {
-        padding: 20px 15px;
+      .contact-wrapper {
+        padding: 20px 15px 0 15px;
       }
 
       .contact-header h2 {
@@ -568,6 +576,10 @@ import { FooterComponent } from "../footer/footer.component";
     }
 
     @media (max-width: 480px) {
+      .contact-wrapper {
+        padding: 15px 10px 0 10px;
+      }
+
       .contact-header h2 {
         font-size: 1.8rem;
       }

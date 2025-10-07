@@ -1,0 +1,437 @@
+// Variáveis de cores - Tema Rosa/Pink
+$primary-pink: #e91e8c;
+$secondary-pink: #f8a5d8;
+$light-pink: #fce4ec;
+$dark-pink: #c2185b;
+$accent-purple: #8e24aa;
+$success-green: #4caf50;
+$info-blue: #2196f3;
+$warning-orange: #ff9800;
+$text-dark: #2c2c2c;
+$text-light: #666666;
+$bg-light: #faf9fd;
+$white: #ffffff;
+
+// Seção Hero
+.hero-section {
+  background: linear-gradient(135deg, $primary-pink 0%, $accent-purple 100%);
+  color: $white;
+  padding: 4rem 2rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .hero-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+  }
+}
+
+// Dashboard da Loja
+.dashboard-section {
+  margin: 3rem 0;
+  padding: 0 2rem;
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: $text-dark;
+    font-weight: 600;
+    font-size: 2.2rem;
+  }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  background: $white;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+  
+  .card-icon {
+    margin-bottom: 1.5rem;
+    
+    i {
+      font-size: 3rem;
+      transition: all 0.3s ease;
+    }
+  }
+  
+  .card-content {
+    h3 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: $text-dark;
+    }
+    
+    .metric-label {
+      font-size: 1rem;
+      color: $text-light;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+  
+  // Cores específicas para cada card
+  &.products {
+    &::before { background: linear-gradient(135deg, $primary-pink, $secondary-pink); }
+    .card-icon i { color: $primary-pink; }
+  }
+  
+  &.categories {
+    &::before { background: linear-gradient(135deg, $accent-purple, $secondary-pink); }
+    .card-icon i { color: $accent-purple; }
+  }
+  
+  &.customers {
+    &::before { background: linear-gradient(135deg, $info-blue, #64b5f6); }
+    .card-icon i { color: $info-blue; }
+  }
+  
+  &.sales {
+    &::before { background: linear-gradient(135deg, $success-green, #81c784); }
+    .card-icon i { color: $success-green; }
+  }
+  
+  &.favorites {
+    &::before { background: linear-gradient(135deg, $primary-pink, $light-pink); }
+    .card-icon i { color: $dark-pink; }
+  }
+  
+  &.cart-items {
+    &::before { background: linear-gradient(135deg, $warning-orange, #ffb74d); }
+    .card-icon i { color: $warning-orange; }
+  }
+}
+
+// Seção de Informações da Loja
+.store-info {
+  margin: 4rem 0;
+  padding: 0 2rem;
+  
+  .content-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+  }
+  
+  .store-image {
+    img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+  }
+  
+  .store-description {
+    h3 {
+      color: $text-dark;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+    
+    p {
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      color: $text-light;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// Seção de Valores
+.values-section {
+  background: linear-gradient(135deg, $light-pink 0%, rgba(252, 228, 236, 0.3) 100%);
+  padding: 4rem 2rem;
+  margin: 4rem 0;
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: $text-dark;
+    font-weight: 600;
+    font-size: 2.2rem;
+  }
+  
+  .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .value-card {
+    background: $white;
+    border-radius: 15px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(233, 30, 140, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(233, 30, 140, 0.2);
+      border-color: $secondary-pink;
+    }
+    
+    .card-icon {
+      margin-bottom: 1.5rem;
+      
+      i {
+        font-size: 2.5rem;
+        color: $primary-pink;
+      }
+    }
+    
+    h3 {
+      color: $text-dark;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    p {
+      color: $text-light;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    
+    .card-footer {
+      .highlight {
+        display: inline-block;
+        background: linear-gradient(135deg, $primary-pink, $secondary-pink);
+        color: $white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Seção de Estatísticas
+.statistics-section {
+  margin: 4rem 0;
+  padding: 0 2rem;
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: $text-dark;
+    font-weight: 600;
+    font-size: 2.2rem;
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .stat-item {
+    text-align: center;
+    padding: 2rem 1rem;
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    
+    &:hover {
+      transform: translateY(-5px);
+      background: rgba(233, 30, 140, 0.05);
+    }
+    
+    i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    h3 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $text-dark;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s ease;
+    }
+    
+    p {
+      color: $text-light;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+    }
+    
+    // Cores específicas para cada estatística
+    &:nth-child(1) {
+      i { color: $primary-pink; }
+      &:hover {
+        i { color: $dark-pink; }
+        h3 { color: $primary-pink; }
+      }
+    }
+    
+    &:nth-child(2) {
+      i { color: $info-blue; }
+      &:hover {
+        i { color: #1976d2; }
+        h3 { color: $info-blue; }
+      }
+    }
+    
+    &:nth-child(3) {
+      i { color: $success-green; }
+      &:hover {
+        i { color: #388e3c; }
+        h3 { color: $success-green; }
+      }
+    }
+    
+    &:nth-child(4) {
+      i { color: $warning-orange; }
+      &:hover {
+        i { color: #f57c00; }
+        h3 { color: $warning-orange; }
+      }
+    }
+  }
+}
+
+// Responsividade
+@media (max-width: 968px) {
+  .store-info .content-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .hero-section {
+    padding: 3rem 1rem;
+    
+    .hero-content h1 {
+      font-size: 2.2rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid,
+  .cards-container,
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .dashboard-card {
+    padding: 2rem 1.5rem;
+    
+    .card-icon i {
+      font-size: 2.5rem;
+    }
+    
+    .card-content h3 {
+      font-size: 2rem;
+    }
+  }
+  
+  .hero-section {
+    padding: 2rem 1rem;
+    
+    .hero-content h1 {
+      font-size: 1.8rem;
+    }
+    
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+  }
+  
+  .store-description h3 {
+    font-size: 1.5rem;
+  }
+  
+  .values-section,
+  .statistics-section,
+  .dashboard-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stat-item {
+    padding: 1.5rem 0.5rem;
+    
+    i {
+      font-size: 2rem;
+    }
+    
+    h3 {
+      font-size: 1.8rem;
+    }
+  }
+  
+  .dashboard-card .card-content h3 {
+    font-size: 1.5rem;
+  }
+}

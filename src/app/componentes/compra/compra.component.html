@@ -1,1 +1,87 @@
-<p>compra works!</p>
+<div class="compra-container">
+  <div class="header-section">
+    <h1 class="page-title">
+      <i class="bi bi-bag-check-fill"></i>
+      Seleção de Produtos
+    </h1>
+    <p class="page-subtitle">Escolha os produtos que deseja comprar</p>
+  </div>
+
+  <!-- Controles de seleção -->
+  <div class="selection-controls">
+    <div class="select-all-container">
+      <label class="checkbox-container">
+        <input 
+          type="checkbox" 
+          [checked]="selectAll" 
+          (change)="toggleSelectAll()"
+        >
+        <span class="checkmark"></span>
+        <span class="label-text">Selecionar Todos ({{ products.length }} produtos)</span>
+      </label>
+    </div>
+    
+    <div class="selection-info" *ngIf="getSelectedCount() > 0">
+      <span class="selected-count">{{ getSelectedCount() }} selecionado(s)</span>
+      <span class="selected-total">Total: R$ {{ getTotalPrice().toFixed(2).replace('.', ',') }}</span>
+    </div>
+  </div>
+
+  <!-- Lista de produtos -->
+  <div class="products-grid">
+    <div class="product-card" 
+         *ngFor="let product of products; trackBy: trackProduct" 
+         [class.selected]="isProductSelected(product.id)">
+      
+      <!-- Checkbox de seleção -->
+      <label class="product-checkbox">
+        <input 
+          type="checkbox" 
+          [checked]="isProductSelected(product.id)" 
+          (change)="toggleProductSelection(product.id)"
+        >
+        <span class="checkmark"></span>
+      </label>
+
+      <!-- Imagem do produto -->
+      <div class="product-image">
+        <img [src]="product.imageUrl" [alt]="product.name">
+      </div>
+
+      <!-- Informações do produto -->
+      <div class="product-info">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-category">{{ product.category }}</p>
+        <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+      </div>
+
+      <!-- Badge de selecionado -->
+      <div class="selected-badge" *ngIf="isProductSelected(product.id)">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botões de ação -->
+  <div class="action-buttons" *ngIf="getSelectedCount() > 0">
+    <button class="btn-add-cart" (click)="addSelectedToCart()">
+      <i class="bi bi-cart-plus"></i>
+      Adicionar ao Carrinho ({{ getSelectedCount() }})
+    </button>
+    <button class="btn-buy-now" (click)="buySelected()">
+      <i class="bi bi-credit-card"></i>
+      Comprar Agora - R$ {{ getTotalPrice().toFixed(2).replace('.', ',') }}
+    </button>
+  </div>
+
+  <!-- Estado vazio -->
+  <div class="empty-state" *ngIf="products.length === 0">
+    <i class="bi bi-bag-x"></i>
+    <h3>Nenhum produto disponível</h3>
+    <p>Não há produtos disponíveis no momento.</p>
+    <button class="btn-back" routerLink="/home">
+      <i class="bi bi-arrow-left"></i>
+      Voltar à Página Inicial
+    </button>
+  </div>
+</div>

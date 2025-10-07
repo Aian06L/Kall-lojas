@@ -1,0 +1,185 @@
+<div class="sobre-wrapper">
+  <!-- Seção Sobre a Loja -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Sobre a Kall Lojas</h1>
+      <p class="hero-subtitle">Sua loja de moda feminina com estilo e qualidade</p>
+    </div>
+  </section>
+
+  <!-- Dashboard da Loja -->
+  <section class="dashboard-section">
+    <h2>Dashboard da Loja</h2>
+    <div class="dashboard-grid">
+      <div class="dashboard-card products">
+        <div class="card-icon">
+          <i class="bi bi-bag-heart"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{ getTotalProducts() }}</h3>
+          <p class="metric-label">Produtos Disponíveis</p>
+        </div>
+      </div>
+      
+      <div class="dashboard-card categories">
+        <div class="card-icon">
+          <i class="bi bi-tags"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{ getTotalCategories() }}</h3>
+          <p class="metric-label">Categorias</p>
+        </div>
+      </div>
+      
+      <div class="dashboard-card customers">
+        <div class="card-icon">
+          <i class="bi bi-people"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{ getEstimatedCustomers() }}</h3>
+          <p class="metric-label">Clientes Ativos</p>
+        </div>
+      </div>
+      
+      <div class="dashboard-card sales">
+        <div class="card-icon">
+          <i class="bi bi-graph-up"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{ getTotalSales() }}</h3>
+          <p class="metric-label">Vendas este Mês</p>
+        </div>
+      </div>
+      
+      <div class="dashboard-card favorites">
+        <div class="card-icon">
+          <i class="bi bi-star-fill"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{ getFavoriteCount() }}</h3>
+          <p class="metric-label">Produtos Favoritados</p>
+        </div>
+      </div>
+      
+      <div class="dashboard-card cart-items">
+        <div class="card-icon">
+          <i class="bi bi-cart-plus"></i>
+        </div>
+        <div class="card-content">
+          <h3>{{ getCartItemCount() }}</h3>
+          <p class="metric-label">Itens no Carrinho</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Informações da Loja -->
+  <section class="store-info">
+    <div class="content-container">
+      <div class="store-image">
+        <img src="https://guiadehospedagem.com.br/wp-content/uploads/2024/06/Leonardo_Diffusion_XL_A_stunning_portrait_of_a_beautiful_woman_1.jpg" alt="Loja Kall">
+      </div>
+      
+      <article class="store-description">
+        <h3>Nossa História</h3>
+        <p>
+          A Kall Lojas nasceu com a missão de democratizar a moda feminina, oferecendo peças de qualidade 
+          com preços acessíveis. Acreditamos que toda mulher merece se sentir bonita e confiante, 
+          independentemente do seu estilo ou orçamento.
+        </p>
+        <p>
+          Nossa coleção é cuidadosamente selecionada para atender aos mais diversos gostos e ocasiões, 
+          desde looks casuais para o dia a dia até peças sofisticadas para eventos especiais.
+          Trabalhamos com fornecedores que compartilham nossos valores de qualidade e sustentabilidade.
+        </p>
+        <p>
+          Com mais de {{ getYearsInBusiness() }} anos no mercado, conquistamos a confiança de milhares 
+          de clientes em todo o Brasil. Nossa equipe está sempre em busca das últimas tendências da moda 
+          para oferecer a você o que há de mais atual e elegante.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Cards de Valores -->
+  <section class="values-section">
+    <h2>Nossos Valores</h2>
+    <div class="cards-container">
+      <div class="value-card" tabindex="0">
+        <div class="card-icon">
+          <i class="bi bi-heart-fill"></i>
+        </div>
+        <h3>Autoestima</h3>
+        <p>Acreditamos que a moda é uma forma de expressão que eleva a autoestima e confiança de cada mulher.</p>
+        <div class="card-footer">
+          <span class="highlight">Empoderamento Feminino</span>
+        </div>
+      </div>
+      
+      <div class="value-card" tabindex="0">
+        <div class="card-icon">
+          <i class="bi bi-gem"></i>
+        </div>
+        <h3>Qualidade</h3>
+        <p>Oferecemos produtos de alta qualidade com o melhor custo-benefício, sem abrir mão do estilo.</p>
+        <div class="card-footer">
+          <span class="highlight">Excelência em Produtos</span>
+        </div>
+      </div>
+      
+      <div class="value-card" tabindex="0">
+        <div class="card-icon">
+          <i class="bi bi-shield-check"></i>
+        </div>
+        <h3>Confiança</h3>
+        <p>Construímos relacionamentos duradouros baseados na transparência e no comprometimento com nossos clientes.</p>
+        <div class="card-footer">
+          <span class="highlight">Relacionamento Duradouro</span>
+        </div>
+      </div>
+      
+      <div class="value-card" tabindex="0">
+        <div class="card-icon">
+          <i class="bi bi-leaf-fill"></i>
+        </div>
+        <h3>Sustentabilidade</h3>
+        <p>Nos preocupamos com o meio ambiente e trabalhamos com fornecedores que respeitam práticas sustentáveis.</p>
+        <div class="card-footer">
+          <span class="highlight">Responsabilidade Ambiental</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Estatísticas da Loja -->
+  <section class="statistics-section">
+    <h2>Números da Kall Lojas</h2>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <i class="bi bi-shop"></i>
+        <h3>{{ getYearsInBusiness() }}+</h3>
+        <p>Anos de Experiência</p>
+      </div>
+      
+      <div class="stat-item">
+        <i class="bi bi-people"></i>
+        <h3>{{ getEstimatedCustomers() }}+</h3>
+        <p>Clientes Satisfeitas</p>
+      </div>
+      
+      <div class="stat-item">
+        <i class="bi bi-box-seam"></i>
+        <h3>{{ getTotalProducts() }}+</h3>
+        <p>Produtos no Catálogo</p>
+      </div>
+      
+      <div class="stat-item">
+        <i class="bi bi-truck"></i>
+        <h3>{{ getDeliveryStates() }}+</h3>
+        <p>Estados Atendidos</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<app-footer></app-footer>

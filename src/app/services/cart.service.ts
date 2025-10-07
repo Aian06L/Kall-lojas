@@ -13,6 +13,9 @@ export interface CartItem {
   providedIn: 'root'
 })
 export class CartService {
+  getItems() {
+    throw new Error('Method not implemented.');
+  }
   private cartItems = new BehaviorSubject<CartItem[]>([]);
   cartItems$ = this.cartItems.asObservable();
 

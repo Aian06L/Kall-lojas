@@ -1,0 +1,316 @@
+<!-- Modal de Pagamento -->
+<div class="payment-modal" *ngIf="showModal" (click)="close()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Header do Modal -->
+    <div class="modal-header">
+      <h2>Finalizar Compra</h2>
+      <button class="close-btn" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="progress-steps">
+      <div class="step" [ngClass]="getStepClass(1)">
+        <span class="step-number">{{ isStepCompleted(1) ? '' : '1' }}</span>
+        <span class="step-label">Dados Pessoais</span>
+      </div>
+      <div class="step" [ngClass]="getStepClass(2)">
+        <span class="step-number">{{ isStepCompleted(2) ? '' : '2' }}</span>
+        <span class="step-label">Endereço</span>
+      </div>
+      <div class="step" [ngClass]="getStepClass(3)">
+        <span class="step-number">{{ isStepCompleted(3) ? '' : '3' }}</span>
+        <span class="step-label">Pagamento</span>
+      </div>
+    </div>
+
+    <!-- Resumo do Pedido -->
+    <div class="order-summary">
+      <h3>Resumo do Pedido</h3>
+      <div class="items-list">
+        <div class="item" *ngFor="let item of items">
+          <img [src]="item.image" [alt]="item.name">
+          <div class="item-info">
+            <span class="item-name">{{ item.name }}</span>
+            <span class="item-quantity">Qtd: {{ item.quantity }}</span>
+          </div>
+          <span class="item-price">R$ {{ (item.price * item.quantity).toFixed(2).replace('.', ',') }}</span>
+        </div>
+      </div>
+      <div class="total">
+        <strong>Total: R$ {{ total.toFixed(2).replace('.', ',') }}</strong>
+      </div>
+    </div>
+
+    <!-- Formulário -->
+    <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Etapa 1: Dados Pessoais -->
+      <div class="form-step" *ngIf="currentStep === 1">
+        <h3>Dados Pessoais</h3>
+        
+        <div class="form-group">
+          <label for="fullName">Nome Completo *</label>
+          <input 
+            id="fullName" 
+            type="text" 
+            formControlName="fullName" 
+            placeholder="Digite seu nome completo"
+            [class.error]="paymentForm.get('fullName')?.invalid && paymentForm.get('fullName')?.touched">
+          <div class="error-message" *ngIf="paymentForm.get('fullName')?.invalid && paymentForm.get('fullName')?.touched">
+            Nome completo é obrigatório (mín. 3 caracteres)
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">E-mail *</label>
+            <input 
+              id="email" 
+              type="email" 
+              formControlName="email" 
+              placeholder="seu@email.com"
+              [class.error]="paymentForm.get('email')?.invalid && paymentForm.get('email')?.touched">
+            <div class="error-message" *ngIf="paymentForm.get('email')?.invalid && paymentForm.get('email')?.touched">
+              E-mail válido é obrigatório
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Telefone *</label>
+            <input 
+              id="phone" 
+              type="tel" 
+              formControlName="phone" 
+              placeholder="(11) 99999-9999"
+              (input)="formatPhone($event)"
+              [class.error]="paymentForm.get('phone')?.invalid && paymentForm.get('phone')?.touched">
+            <div class="error-message" *ngIf="paymentForm.get('phone')?.invalid && paymentForm.get('phone')?.touched">
+              Telefone válido é obrigatório
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Etapa 2: Endereço -->
+      <div class="form-step" *ngIf="currentStep === 2">
+        <h3>Endereço de Entrega</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cep">CEP *</label>
+            <input 
+              id="cep" 
+              type="text" 
+              formControlName="cep" 
+              placeholder="00000-000"
+              (input)="formatCEP($event)"
+              [class.error]="paymentForm.get('cep')?.invalid && paymentForm.get('cep')?.touched">
+            <div class="error-message" *ngIf="paymentForm.get('cep')?.invalid && paymentForm.get('cep')?.touched">
+              CEP válido é obrigatório
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Endereço *</label>
+            <input 
+              id="address" 
+              type="text" 
+              formControlName="address" 
+              placeholder="Rua, Avenida, etc."
+              [class.error]="paymentForm.get('address')?.invalid && paymentForm.get('address')?.touched">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="flex: 1;">
+            <label for="number">Número *</label>
+            <input 
+              id="number" 
+              type="text" 
+              formControlName="number" 
+              placeholder="123"
+              [class.error]="paymentForm.get('number')?.invalid && paymentForm.get('number')?.touched">
+          </div>
+
+          <div class="form-group" style="flex: 2;">
+            <label for="complement">Complemento</label>
+            <input 
+              id="complement" 
+              type="text" 
+              formControlName="complement" 
+              placeholder="Apartamento, Bloco, etc.">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="neighborhood">Bairro *</label>
+            <input 
+              id="neighborhood" 
+              type="text" 
+              formControlName="neighborhood" 
+              placeholder="Nome do bairro"
+              [class.error]="paymentForm.get('neighborhood')?.invalid && paymentForm.get('neighborhood')?.touched">
+          </div>
+
+          <div class="form-group">
+            <label for="city">Cidade *</label>
+            <input 
+              id="city" 
+              type="text" 
+              formControlName="city" 
+              placeholder="Nome da cidade"
+              [class.error]="paymentForm.get('city')?.invalid && paymentForm.get('city')?.touched">
+          </div>
+
+          <div class="form-group" style="flex: 0.5;">
+            <label for="state">UF *</label>
+            <select 
+              id="state" 
+              formControlName="state"
+              [class.error]="paymentForm.get('state')?.invalid && paymentForm.get('state')?.touched">
+              <option value="">UF</option>
+              <option value="SP">SP</option>
+              <option value="RJ">RJ</option>
+              <option value="MG">MG</option>
+              <option value="RS">RS</option>
+              <!-- Adicionar outros estados conforme necessário -->
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Etapa 3: Pagamento -->
+      <div class="form-step" *ngIf="currentStep === 3">
+        <h3>Dados de Pagamento</h3>
+        
+        <div class="payment-methods">
+          <label class="payment-method">
+            <input type="radio" formControlName="paymentMethod" value="credit">
+            <span class="checkmark"></span>
+            <i class="bi bi-credit-card"></i>
+            Cartão de Crédito
+          </label>
+          <label class="payment-method">
+            <input type="radio" formControlName="paymentMethod" value="debit">
+            <span class="checkmark"></span>
+            <i class="bi bi-credit-card-2-front"></i>
+            Cartão de Débito
+          </label>
+          <label class="payment-method">
+            <input type="radio" formControlName="paymentMethod" value="pix">
+            <span class="checkmark"></span>
+            <i class="bi bi-qr-code"></i>
+            PIX
+          </label>
+        </div>
+
+        <div *ngIf="paymentForm.get('paymentMethod')?.value === 'credit' || paymentForm.get('paymentMethod')?.value === 'debit'">
+          <div class="form-group">
+            <label for="cardNumber">Número do Cartão *</label>
+            <input 
+              id="cardNumber" 
+              type="text" 
+              formControlName="cardNumber" 
+              placeholder="0000 0000 0000 0000"
+              (input)="formatCardNumber($event)"
+              [class.error]="paymentForm.get('cardNumber')?.invalid && paymentForm.get('cardNumber')?.touched">
+          </div>
+
+          <div class="form-group">
+            <label for="cardName">Nome no Cartão *</label>
+            <input 
+              id="cardName" 
+              type="text" 
+              formControlName="cardName" 
+              placeholder="Nome como está no cartão"
+              [class.error]="paymentForm.get('cardName')?.invalid && paymentForm.get('cardName')?.touched">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expiryDate">Validade *</label>
+              <input 
+                id="expiryDate" 
+                type="text" 
+                formControlName="expiryDate" 
+                placeholder="MM/AA"
+                (input)="formatExpiryDate($event)"
+                [class.error]="paymentForm.get('expiryDate')?.invalid && paymentForm.get('expiryDate')?.touched">
+            </div>
+
+            <div class="form-group">
+              <label for="cvv">CVV *</label>
+              <input 
+                id="cvv" 
+                type="text" 
+                formControlName="cvv" 
+                placeholder="123"
+                maxlength="4"
+                [class.error]="paymentForm.get('cvv')?.invalid && paymentForm.get('cvv')?.touched">
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="paymentForm.get('paymentMethod')?.value === 'credit'">
+            <label for="installments">Parcelas</label>
+            <select id="installments" formControlName="installments">
+              <option value="1">1x de R$ {{ total.toFixed(2).replace('.', ',') }} - À vista</option>
+              <option value="2">2x de R$ {{ (total/2).toFixed(2).replace('.', ',') }} sem juros</option>
+              <option value="3">3x de R$ {{ (total/3).toFixed(2).replace('.', ',') }} sem juros</option>
+              <option value="6">6x de R$ {{ (total/6).toFixed(2).replace('.', ',') }} sem juros</option>
+              <option value="12">12x de R$ {{ (total/12).toFixed(2).replace('.', ',') }} sem juros</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pix-info" *ngIf="paymentForm.get('paymentMethod')?.value === 'pix'">
+          <div class="pix-container">
+            <i class="bi bi-qr-code-scan"></i>
+            <h4>Pagamento via PIX</h4>
+            <p>Após confirmar, você receberá um QR Code para pagamento instantâneo.</p>
+            <div class="pix-advantages">
+              <div class="advantage">
+                <i class="bi bi-lightning-fill"></i>
+                <span>Pagamento instantâneo</span>
+              </div>
+              <div class="advantage">
+                <i class="bi bi-shield-check-fill"></i>
+                <span>100% seguro</span>
+              </div>
+              <div class="advantage">
+                <i class="bi bi-percent"></i>
+                <span>Sem taxas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botões de Navegação -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="previousStep()" *ngIf="currentStep > 1">
+          <i class="bi bi-arrow-left"></i>
+          Voltar
+        </button>
+        
+        <button type="button" class="btn btn-primary" (click)="nextStep()" *ngIf="currentStep < 3" [disabled]="!isCurrentStepValid()">
+          Continuar
+          <i class="bi bi-arrow-right"></i>
+        </button>
+        
+        <button type="submit" class="btn btn-success" *ngIf="currentStep === 3" [disabled]="paymentForm.invalid || isProcessing">
+          <span *ngIf="!isProcessing">
+            <i class="bi bi-check-circle"></i>
+            Finalizar Compra
+          </span>
+          <span *ngIf="isProcessing">
+            <i class="bi bi-hourglass-split"></i>
+            Processando...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

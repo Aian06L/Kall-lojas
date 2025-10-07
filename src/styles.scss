@@ -2,5 +2,254 @@
 
 @use 'bootstrap/dist/css/bootstrap.min.css';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+// Global Variables
+:root {
+  // Breakpoints
+  --bp-xs: 0px;
+  --bp-sm: 576px;
+  --bp-md: 768px;
+  --bp-lg: 992px;
+  --bp-xl: 1200px;
+  --bp-xxl: 1400px;
+  
+  // Colors
+  --primary-pink: #e91e8c;
+  --secondary-pink: #f8a5d8;
+  --light-pink: #fce4ec;
+  --dark-pink: #c2185b;
+  
+  // Spacing
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-xxl: 3rem;
+}
+
+// Reset and Base Styles
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body { 
+  height: 100%; 
+  scroll-behavior: smooth;
+}
+
+body { 
+  margin: 0; 
+  padding: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Global Responsive Utilities
+.container-responsive {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .container-responsive {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container-responsive {
+    padding: 0 10px;
+  }
+}
+
+// Global Typography Responsiveness
+h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
+h4 { font-size: clamp(1rem, 2vw, 1.25rem); }
+h5 { font-size: clamp(0.9rem, 1.8vw, 1.1rem); }
+h6 { font-size: clamp(0.8rem, 1.5vw, 1rem); }
+
+p { font-size: clamp(0.875rem, 2vw, 1rem); }
+
+// Global Button Responsiveness
+.btn-responsive {
+  padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px);
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+// Hide elements on different screen sizes
+.hide-mobile {
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+.hide-desktop {
+  @media (min-width: 769px) {
+    display: none !important;
+  }
+}
+
+.hide-tablet {
+  @media (min-width: 577px) and (max-width: 992px) {
+    display: none !important;
+  }
+}
+
+// Show elements only on specific sizes
+.show-mobile-only {
+  display: none !important;
+  
+  @media (max-width: 768px) {
+    display: block !important;
+  }
+}
+
+.show-desktop-only {
+  display: none !important;
+  
+  @media (min-width: 769px) {
+    display: block !important;
+  }
+}
+
+// Global spacing utilities
+@media (max-width: 768px) {
+  .mobile-padding {
+    padding: var(--space-md) !important;
+  }
+  
+  .mobile-margin {
+    margin: var(--space-md) !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .mobile-padding-sm {
+    padding: var(--space-sm) !important;
+  }
+  
+  .mobile-margin-sm {
+    margin: var(--space-sm) !important;
+  }
+}
+
+// Flexbox utilities for responsive layouts
+.flex-responsive {
+  display: flex;
+  gap: var(--space-md);
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+}
+
+.grid-responsive {
+  display: grid;
+  gap: var(--space-md);
+  
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  @media (min-width: 992px) and (max-width: 1199px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  @media (min-width: 768px) and (max-width: 991px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+}
+
+// Improved scroll behavior
+html {
+  scroll-padding-top: 80px; // Account for fixed header
+}
+
+// Focus states for accessibility
+*:focus {
+  outline: 2px solid var(--primary-pink);
+  outline-offset: 2px;
+}
+
+// Image responsiveness
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+// Global animations
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+// Purchase notification animations
+@keyframes slideInRight {
+  from { 
+    opacity: 0; 
+    transform: translateX(100%); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+@keyframes slideOutRight {
+  from { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+  to { 
+    opacity: 0; 
+    transform: translateX(100%); 
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+// Purchase notification styles
+.purchase-notification {
+  font-family: 'Roboto', sans-serif;
+  
+  i {
+    font-size: 18px;
+    color: #ffffff;
+  }
+  
+  span {
+    font-weight: 600;
+  }
+  
+  small {
+    display: block;
+    opacity: 0.9;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+}

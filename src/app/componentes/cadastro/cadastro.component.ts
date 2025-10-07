@@ -26,7 +26,8 @@ export class CadastroComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
+      confirmPassword: ['', [Validators.required]],
+      lgpdAccepted: [false, [Validators.requiredTrue]]
     }, { validators: this.passwordMatchValidator });
   }
 
@@ -92,6 +93,9 @@ export class CadastroComponent implements OnInit {
       }
       if (field.errors['passwordMismatch']) {
         return 'Senhas não coincidem';
+      }
+      if (field.errors['required'] && fieldName === 'lgpdAccepted') {
+        return 'Você deve aceitar os termos da LGPD';
       }
     }
     return '';
