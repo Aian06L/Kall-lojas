@@ -211,23 +211,6 @@ ng build --prod
 
 # Os arquivos gerados estarão na pasta dist/
 ```
-
-## 📱 Capturas de Tela
-
-*[Aqui você pode adicionar screenshots da aplicação quando estiver rodando]*
-
-### Página Inicial
-*Screenshot da home com catálogo de produtos*
-
-### Sistema de Login
-*Screenshot da tela de login/cadastro*
-
-### Carrinho de Compras
-*Screenshot do carrinho com produtos adicionados*
-
-### Galeria de Looks
-*Screenshot da página de looks inspiradores*
-
 ## 🤝 Contribuição
 
 Contribuições são bem-vindas! Para contribuir:
@@ -238,10 +221,6 @@ Contribuições são bem-vindas! Para contribuir:
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
 ## 👨‍💻 Desenvolvedor
 
 **Aian06L**
@@ -251,5 +230,5 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 ---
 
 <div align="center">
-  <h3>🛍️ Desenvolvido com ❤️ para oferecer a melhor experiência em moda feminina</h3>
+  <h3>🛍️ Desenvolvido por Aian para oferecer a melhor experiência em moda feminina</h3>
 </div>
