@@ -1,10 +1,18 @@
-import { Component, OnInit, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { ClothingService } from '../../services/clothing.service';
 import { LooksService } from '../../services/looks.service';
 import { CartService } from '../../services/cart.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Clothing } from '../../model/clothing.model';
+
+interface HeroSlide {
+  imageUrl: string;
+  title: string;
+  subtitle: string;
+  buttonText?: string;
+  action?: string;
+}
 
 @Component({
   selector: 'app-home',
@@ -13,7 +21,7 @@ import { Clothing } from '../../model/clothing.model';
   standalone: true,
   imports: [CommonModule]
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // ViewChild para referências dos carrosseis
   @ViewChild('dressesCarousel') dressesCarousel!: ElementRef;
   @ViewChild('blousesCarousel') blousesCarousel!: ElementRef;
@@ -23,6 +31,42 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('partyCarousel') partyCarousel!: ElementRef;
   @ViewChild('sportCarousel') sportCarousel!: ElementRef;
   @ViewChild('casualCarousel') casualCarousel!: ElementRef;
+
+  // Carrossel Hero
+  heroSlides: HeroSlide[] = [
+    {
+      imageUrl: 'https://www.mariafilo.com.br/_next/image?url=https://mariafilo.vtexassets.com/assets/vtex.file-manager-graphql/images/92cd92f2-6e22-4d1b-9efd-0b8e1847f9a2___8af232c851db1f381d0fe1178a1bbd4a.jpg&w=3840&q=90',
+      title: 'Descubra Seu Estilo Único',
+      subtitle: 'Encontre as peças perfeitas para expressar sua personalidade',
+      buttonText: 'Ver Coleção',
+      action: 'collection'
+    },
+    {
+      imageUrl: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=600&fit=crop&crop=center',
+      title: 'Nova Coleção Verão',
+      subtitle: 'Looks frescos e modernos para os dias quentes',
+      buttonText: 'Explorar',
+      action: 'summer'
+    },
+    {
+      imageUrl: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200&h=600&fit=crop&crop=center',
+      title: 'Elegância para o Trabalho',
+      subtitle: 'Peças sofisticadas para o ambiente profissional',
+      buttonText: 'Ver Roupas',
+      action: 'office'
+    },
+    {
+      imageUrl: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=1200&h=600&fit=crop&crop=center',
+      title: 'Looks para Festas',
+      subtitle: 'Brilhe em qualquer ocasião especial',
+      buttonText: 'Descobrir',
+      action: 'party'
+    }
+  ];
+
+  currentSlideIndex: number = 0;
+  carouselInterval: any;
+  autoSlideInterval: number = 5000; // 5 segundos
 
   // Listas de produtos por categoria
   casualClothing: Clothing[] = [];
@@ -235,6 +279,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     
     // Adicionar listeners de scroll para atualizar estado dos botões
     this.setupScrollListeners();
+    
+    // Iniciar carrossel automático do hero
+    this.startAutoSlide();
   }
 
   private initializeCarouselStates(): void {
@@ -319,6 +366,67 @@ export class HomeComponent implements OnInit, AfterViewInit {
       case 'casual': return this.casualCarousel?.nativeElement;
       default: return null;
     }
+  }
+
+  // Métodos do carrossel automático
+  ngOnDestroy(): void {
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
+    }
+  }
+
+  private startAutoSlide(): void {
+    this.carouselInterval = setInterval(() => {
+      this.nextSlide();
+    }, this.autoSlideInterval);
+  }
+
+  private stopAutoSlide(): void {
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
+    }
+  }
+
+  nextSlide(): void {
+    this.currentSlideIndex = (this.currentSlideIndex + 1) % this.heroSlides.length;
+  }
+
+  previousSlide(): void {
+    this.currentSlideIndex = this.currentSlideIndex === 0 
+      ? this.heroSlides.length - 1 
+      : this.currentSlideIndex - 1;
+  }
+
+  goToSlide(index: number): void {
+    this.currentSlideIndex = index;
+    this.stopAutoSlide();
+    setTimeout(() => this.startAutoSlide(), 3000); // Reinicia após 3 segundos
+  }
+
+  onHeroButtonClick(slide: HeroSlide): void {
+    switch (slide.action) {
+      case 'collection':
+        window.scrollTo({ top: 600, behavior: 'smooth' });
+        break;
+      case 'summer':
+        this.filterByCategory('Casual');
+        break;
+      case 'office':
+        this.filterByCategory('Escritório');
+        break;
+      case 'party':
+        this.filterByCategory('Festa');
+        break;
+      default:
+        window.scrollTo({ top: 600, behavior: 'smooth' });
+    }
+  }
+
+  private filterByCategory(category: string): void {
+    this.clothingService.getClothingByCategory(category).subscribe(products => {
+      this.filteredCatalog = products;
+      window.scrollTo({ top: 600, behavior: 'smooth' });
+    });
   }
 
 }
