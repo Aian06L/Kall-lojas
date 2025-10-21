@@ -1,0 +1,377 @@
+<div class="profile-container">
+  <!-- Header do Perfil -->
+  <div class="profile-header">
+    <div class="user-info">
+      <div class="user-avatar">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="user-details">
+        <h1>{{ user?.name }}</h1>
+        <p class="user-email">{{ user?.email }}</p>
+        <span class="user-role" [class.admin]="isAdmin()">
+          {{ isAdmin() ? 'Administrador' : 'Cliente' }}
+        </span>
+      </div>
+    </div>
+    
+    <!-- Admin Quick Access -->
+    <div class="admin-quick-access" *ngIf="isAdmin()">
+      <a routerLink="/admin/dashboard" class="btn btn-admin">
+        <i class="bi bi-speedometer2"></i>
+        Dashboard Admin
+      </a>
+    </div>
+  </div>
+
+  <!-- Mensagens -->
+  <div class="success-message" *ngIf="successMessage">
+    <i class="bi bi-check-circle-fill"></i>
+    {{ successMessage }}
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    {{ errorMessage }}
+  </div>
+
+  <!-- Navegação por Tabs -->
+  <div class="profile-tabs">
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'personal'"
+      (click)="setActiveTab('personal')"
+    >
+      <i class="bi bi-person"></i>
+      Dados Pessoais
+    </button>
+    
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'address'"
+      (click)="setActiveTab('address')"
+    >
+      <i class="bi bi-house"></i>
+      Endereço
+    </button>
+    
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'password'"
+      (click)="setActiveTab('password')"
+    >
+      <i class="bi bi-shield-lock"></i>
+      Segurança
+    </button>
+
+    <button 
+      *ngIf="!isAdmin()"
+      class="tab-button" 
+      [class.active]="activeTab === 'orders'"
+      (click)="setActiveTab('orders')"
+    >
+      <i class="bi bi-bag"></i>
+      Meus Pedidos
+    </button>
+  </div>
+
+  <!-- Conteúdo das Tabs -->
+  <div class="profile-content">
+
+    <!-- Dados Pessoais -->
+    <div class="tab-content" *ngIf="activeTab === 'personal'">
+      <div class="content-header">
+        <h2>Dados Pessoais</h2>
+        <button 
+          class="btn-edit" 
+          (click)="toggleEdit()"
+          [class.editing]="isEditing"
+        >
+          <i class="bi" [class.bi-pencil]="!isEditing" [class.bi-x-lg]="isEditing"></i>
+          {{ isEditing ? 'Cancelar' : 'Editar' }}
+        </button>
+      </div>
+
+      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="profile-form">
+        <!-- Nome -->
+        <div class="input-group">
+          <label for="name">Nome Completo</label>
+          <div class="input-wrapper">
+            <i class="bi bi-person-fill input-icon"></i>
+            <input 
+              type="text" 
+              id="name" 
+              formControlName="name"
+              [readonly]="!isEditing"
+              [class.error]="isFieldInvalid(profileForm, 'name')"
+            />
+          </div>
+          <div class="error-text" *ngIf="isFieldInvalid(profileForm, 'name')">
+            {{ getFieldError(profileForm, 'name') }}
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="input-group">
+          <label for="email">Email</label>
+          <div class="input-wrapper">
+            <i class="bi bi-envelope-fill input-icon"></i>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email"
+              [readonly]="!isEditing"
+              [class.error]="isFieldInvalid(profileForm, 'email')"
+            />
+          </div>
+          <div class="error-text" *ngIf="isFieldInvalid(profileForm, 'email')">
+            {{ getFieldError(profileForm, 'email') }}
+          </div>
+        </div>
+
+        <!-- Botão Salvar -->
+        <button 
+          *ngIf="isEditing" 
+          type="submit" 
+          class="btn-save"
+          [disabled]="profileForm.invalid || isSubmitting"
+        >
+          <span *ngIf="!isSubmitting">
+            <i class="bi bi-check-lg"></i>
+            Salvar Alterações
+          </span>
+          <span *ngIf="isSubmitting">
+            <i class="bi bi-arrow-clockwise spin"></i>
+            Salvando...
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Endereço -->
+    <div class="tab-content" *ngIf="activeTab === 'address'">
+      <div class="content-header">
+        <h2>Endereço</h2>
+      </div>
+
+      <form [formGroup]="addressForm" (ngSubmit)="updateAddress()" class="profile-form">
+        <div class="address-grid">
+          <!-- Rua -->
+          <div class="input-group">
+            <label for="street">Rua</label>
+            <input 
+              type="text" 
+              id="street" 
+              formControlName="street"
+              placeholder="Nome da rua"
+              [class.error]="isFieldInvalid(addressForm, 'street')"
+            />
+            <div class="error-text" *ngIf="isFieldInvalid(addressForm, 'street')">
+              {{ getFieldError(addressForm, 'street') }}
+            </div>
+          </div>
+
+          <!-- Número -->
+          <div class="input-group">
+            <label for="number">Número</label>
+            <input 
+              type="text" 
+              id="number" 
+              formControlName="number"
+              placeholder="123"
+              [class.error]="isFieldInvalid(addressForm, 'number')"
+            />
+            <div class="error-text" *ngIf="isFieldInvalid(addressForm, 'number')">
+              {{ getFieldError(addressForm, 'number') }}
+            </div>
+          </div>
+
+          <!-- Complemento -->
+          <div class="input-group">
+            <label for="complement">Complemento</label>
+            <input 
+              type="text" 
+              id="complement" 
+              formControlName="complement"
+              placeholder="Apto, casa, etc."
+            />
+          </div>
+
+          <!-- Bairro -->
+          <div class="input-group">
+            <label for="neighborhood">Bairro</label>
+            <input 
+              type="text" 
+              id="neighborhood" 
+              formControlName="neighborhood"
+              placeholder="Nome do bairro"
+              [class.error]="isFieldInvalid(addressForm, 'neighborhood')"
+            />
+            <div class="error-text" *ngIf="isFieldInvalid(addressForm, 'neighborhood')">
+              {{ getFieldError(addressForm, 'neighborhood') }}
+            </div>
+          </div>
+
+          <!-- Cidade -->
+          <div class="input-group">
+            <label for="city">Cidade</label>
+            <input 
+              type="text" 
+              id="city" 
+              formControlName="city"
+              placeholder="Nome da cidade"
+              [class.error]="isFieldInvalid(addressForm, 'city')"
+            />
+            <div class="error-text" *ngIf="isFieldInvalid(addressForm, 'city')">
+              {{ getFieldError(addressForm, 'city') }}
+            </div>
+          </div>
+
+          <!-- Estado -->
+          <div class="input-group">
+            <label for="state">Estado</label>
+            <input 
+              type="text" 
+              id="state" 
+              formControlName="state"
+              placeholder="SP"
+              maxlength="2"
+              [class.error]="isFieldInvalid(addressForm, 'state')"
+            />
+            <div class="error-text" *ngIf="isFieldInvalid(addressForm, 'state')">
+              {{ getFieldError(addressForm, 'state') }}
+            </div>
+          </div>
+
+          <!-- CEP -->
+          <div class="input-group">
+            <label for="zipCode">CEP</label>
+            <input 
+              type="text" 
+              id="zipCode" 
+              formControlName="zipCode"
+              placeholder="00000-000"
+              maxlength="9"
+              [class.error]="isFieldInvalid(addressForm, 'zipCode')"
+            />
+            <div class="error-text" *ngIf="isFieldInvalid(addressForm, 'zipCode')">
+              {{ getFieldError(addressForm, 'zipCode') }}
+            </div>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn-save"
+          [disabled]="addressForm.invalid || isSubmitting"
+        >
+          <span *ngIf="!isSubmitting">
+            <i class="bi bi-check-lg"></i>
+            Salvar Endereço
+          </span>
+          <span *ngIf="isSubmitting">
+            <i class="bi bi-arrow-clockwise spin"></i>
+            Salvando...
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Segurança -->
+    <div class="tab-content" *ngIf="activeTab === 'password'">
+      <div class="content-header">
+        <h2>Alterar Senha</h2>
+      </div>
+
+      <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="profile-form">
+        <!-- Senha Atual -->
+        <div class="input-group">
+          <label for="currentPassword">Senha Atual</label>
+          <div class="input-wrapper">
+            <i class="bi bi-lock-fill input-icon"></i>
+            <input 
+              type="password" 
+              id="currentPassword" 
+              formControlName="currentPassword"
+              placeholder="Digite sua senha atual"
+              [class.error]="isFieldInvalid(passwordForm, 'currentPassword')"
+            />
+          </div>
+          <div class="error-text" *ngIf="isFieldInvalid(passwordForm, 'currentPassword')">
+            {{ getFieldError(passwordForm, 'currentPassword') }}
+          </div>
+        </div>
+
+        <!-- Nova Senha -->
+        <div class="input-group">
+          <label for="newPassword">Nova Senha</label>
+          <div class="input-wrapper">
+            <i class="bi bi-lock-fill input-icon"></i>
+            <input 
+              type="password" 
+              id="newPassword" 
+              formControlName="newPassword"
+              placeholder="Digite uma nova senha"
+              [class.error]="isFieldInvalid(passwordForm, 'newPassword')"
+            />
+          </div>
+          <div class="error-text" *ngIf="isFieldInvalid(passwordForm, 'newPassword')">
+            {{ getFieldError(passwordForm, 'newPassword') }}
+          </div>
+        </div>
+
+        <!-- Confirmar Nova Senha -->
+        <div class="input-group">
+          <label for="confirmPassword">Confirmar Nova Senha</label>
+          <div class="input-wrapper">
+            <i class="bi bi-lock-fill input-icon"></i>
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              formControlName="confirmPassword"
+              placeholder="Confirme a nova senha"
+              [class.error]="isFieldInvalid(passwordForm, 'confirmPassword')"
+            />
+          </div>
+          <div class="error-text" *ngIf="isFieldInvalid(passwordForm, 'confirmPassword')">
+            {{ getFieldError(passwordForm, 'confirmPassword') }}
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn-save"
+          [disabled]="passwordForm.invalid || isSubmitting"
+        >
+          <span *ngIf="!isSubmitting">
+            <i class="bi bi-shield-check"></i>
+            Alterar Senha
+          </span>
+          <span *ngIf="isSubmitting">
+            <i class="bi bi-arrow-clockwise spin"></i>
+            Alterando...
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Meus Pedidos (apenas para clientes) -->
+    <div class="tab-content" *ngIf="activeTab === 'orders' && !isAdmin()">
+      <div class="content-header">
+        <h2>Meus Pedidos</h2>
+      </div>
+      
+      <div class="orders-section">
+        <div class="empty-state">
+          <i class="bi bi-bag"></i>
+          <h3>Nenhum pedido encontrado</h3>
+          <p>Você ainda não fez nenhum pedido.</p>
+          <a routerLink="/home" class="btn btn-primary">
+            <i class="bi bi-arrow-left"></i>
+            Continuar Comprando
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

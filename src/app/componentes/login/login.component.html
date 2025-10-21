@@ -94,9 +94,84 @@
 
     <!-- Credenciais de demonstracao -->
     <div class="demo-credentials">
-      <p><strong>Credenciais de demonstração:</strong></p>
-      <p>Email: <code>user&#64;example.com</code></p>
-      <p>Senha: <code>password</code></p>
+      <div class="demo-header">
+        <i class="bi bi-info-circle-fill"></i>
+        <strong>Credenciais de Teste</strong>
+      </div>
+      <div class="credentials-grid">
+        <div class="credential-item admin">
+          <div class="credential-header">
+            <i class="bi bi-shield-fill-check"></i>
+            <h4>Administrador</h4>
+          </div>
+          <div class="credential-data">
+            <div class="credential-field">
+              <span class="label">Email:</span>
+              <code class="email">admin&#64;kall.store</code>
+              <button type="button" class="copy-btn" (click)="copyToClipboard('admin@kall.store')">
+                <i class="bi bi-copy"></i>
+              </button>
+            </div>
+            <div class="credential-field">
+              <span class="label">Senha:</span>
+              <code class="password">Kall&#64;2025!</code>
+              <button type="button" class="copy-btn" (click)="copyToClipboard('Kall@2025!')">
+                <i class="bi bi-copy"></i>
+              </button>
+            </div>
+          </div>
+          <button type="button" class="quick-fill-btn" (click)="fillCredentials('admin@kall.store', 'Kall@2025!')">
+            <i class="bi bi-lightning-fill"></i>
+            Preencher
+          </button>
+        </div>
+        
+        <div class="credential-item customer">
+          <div class="credential-header">
+            <i class="bi bi-person-fill"></i>
+            <h4>Cliente</h4>
+          </div>
+          <div class="credential-data">
+            <div class="credential-field">
+              <span class="label">Email:</span>
+              <code class="email">cliente&#64;demo.com</code>
+              <button type="button" class="copy-btn" (click)="copyToClipboard('cliente@demo.com')">
+                <i class="bi bi-copy"></i>
+              </button>
+            </div>
+            <div class="credential-field">
+              <span class="label">Senha:</span>
+              <code class="password">Demo123!</code>
+              <button type="button" class="copy-btn" (click)="copyToClipboard('Demo123!')">
+                <i class="bi bi-copy"></i>
+              </button>
+            </div>
+          </div>
+          <button type="button" class="quick-fill-btn" (click)="fillCredentials('cliente@demo.com', 'Demo123!')">
+            <i class="bi bi-lightning-fill"></i>
+            Preencher
+          </button>
+        </div>
+      </div>
+      
+      <!-- Credenciais adicionais -->
+      <div class="additional-credentials">
+        <details class="additional-toggle">
+          <summary>
+            <i class="bi bi-chevron-down"></i>
+            Mais credenciais de teste
+          </summary>
+          <div class="additional-list">
+            <div class="additional-item">
+              <strong>Cliente 2:</strong> 
+              <span>joao&#64;teste.com / Joao123!</span>
+              <button type="button" class="mini-fill-btn" (click)="fillCredentials('joao@teste.com', 'Joao123!')">
+                <i class="bi bi-arrow-right-circle-fill"></i>
+              </button>
+            </div>
+          </div>
+        </details>
+      </div>
     </div>
 
     <!-- Link para Cadastro -->

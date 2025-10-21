@@ -1,4 +1,5 @@
-<section class="hero-carousel-section">
+<!-- Hero Carousel - Oculto durante busca -->
+<section class="hero-carousel-section" *ngIf="!isSearching">
   <div class="hero-carousel-container">
     <!-- Slides do carrossel -->
     <div class="hero-slide" 
@@ -35,37 +36,134 @@
 </section>
 
 <div class="clothing-container">
-  <h1>Catálogo de Roupas Femininas</h1>
+  <!-- Seção de Busca - Mostrar apenas quando há busca ativa -->
+  <div *ngIf="isSearching" class="search-results-container">
+    <!-- Header da busca com botão de voltar -->
+    <div class="search-navigation">
+      <button class="btn btn-outline-primary back-btn" (click)="clearSearch()">
+        <i class="bi bi-arrow-left me-2"></i>Voltar ao início
+      </button>
+    </div>
+    
+    <div class="search-header">
+      <h2 *ngIf="originalSearchResults.length > 0">
+        Resultados para "{{ currentSearchTerm }}" ({{ filteredCatalog.length }} de {{ originalSearchResults.length }} {{ originalSearchResults.length === 1 ? 'produto' : 'produtos' }})
+      </h2>
+      <h2 *ngIf="originalSearchResults.length === 0">
+        Nenhum resultado encontrado para "{{ currentSearchTerm }}"
+      </h2>
+      <p *ngIf="originalSearchResults.length === 0" class="search-suggestion">
+        Tente usar outras palavras-chave ou <button class="btn btn-link p-0" (click)="clearSearch()">volte ao catálogo completo</button>.
+      </p>
+    </div>
 
-  <div class="main-carousel">
-    <div class="carousel-wrapper">
-      <div class="carousel-item" *ngFor="let image of carouselImages">
-        <img [src]="image" alt="Roupas Femininas" />
+    <!-- Filtros de busca -->
+    <div *ngIf="originalSearchResults.length > 0" class="search-filters">
+      <div class="filters-container">
+        <div class="filter-group">
+          <label for="priceFilter" class="filter-label">
+            <i class="bi bi-currency-dollar me-2"></i>Ordenar por Preço:
+          </label>
+          <select id="priceFilter" class="form-select filter-select" [(ngModel)]="priceFilter" (change)="onPriceFilterChange()">
+            <option value="">Selecionar</option>
+            <option value="asc">Menor Preço</option>
+            <option value="desc">Maior Preço</option>
+            <option value="under50">Até R$ 50</option>
+            <option value="between50and100">R$ 50 - R$ 100</option>
+            <option value="above100">Acima R$ 100</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="sizeFilter" class="filter-label">
+            <i class="bi bi-rulers me-2"></i>Tamanho:
+          </label>
+          <select id="sizeFilter" class="form-select filter-select" [(ngModel)]="sizeFilter" (change)="onSizeFilterChange()">
+            <option value="">Todos os Tamanhos</option>
+            <option value="PP">PP</option>
+            <option value="P">P</option>
+            <option value="M">M</option>
+            <option value="G">G</option>
+            <option value="GG">GG</option>
+            <option value="XG">XG</option>
+          </select>
+        </div>
+
+        <div class="filter-actions">
+          <button class="btn btn-outline-secondary clear-filters-btn" (click)="clearFilters()" *ngIf="priceFilter || sizeFilter">
+            <i class="bi bi-x-circle me-2"></i>Limpar Filtros
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Seção de Busca -->
-  <div *ngIf="filteredCatalog.length > 0 && filteredCatalog.length < 40" class="search-results">
-    <h2>Resultados da Busca</h2>
-    <div class="catalog-grid">
+    <!-- Sugestões quando não há resultados -->
+    <div *ngIf="filteredCatalog.length === 0" class="search-suggestions">
+      <h3>Que tal explorar estas categorias?</h3>
+      <div class="suggestion-categories">
+        <button class="btn btn-outline-secondary category-suggestion" (click)="filterByCategory('Vestidos')">
+          <i class="bi bi-person-dress me-2"></i>Vestidos
+        </button>
+        <button class="btn btn-outline-secondary category-suggestion" (click)="filterByCategory('Blusas')">
+          <i class="bi bi-person me-2"></i>Blusas
+        </button>
+        <button class="btn btn-outline-secondary category-suggestion" (click)="filterByCategory('Calças')">
+          <i class="bi bi-person-standing me-2"></i>Calças
+        </button>
+        <button class="btn btn-outline-secondary category-suggestion" (click)="filterByCategory('Festa')">
+          <i class="bi bi-star me-2"></i>Festa
+        </button>
+        <button class="btn btn-outline-secondary category-suggestion" (click)="filterByCategory('Casual')">
+          <i class="bi bi-sun me-2"></i>Casual
+        </button>
+      </div>
+    </div>
+    
+    <div class="catalog-grid" *ngIf="filteredCatalog.length > 0">
       <div class="catalog-item" *ngFor="let product of filteredCatalog">
         <div class="favorite-icon" (click)="toggleFavorite(product)">
-          <span [class.favorited]="isFavorite(product)">&#10084;</span>
+          <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
         </div>
+        <div class="product-badge">Busca</div>
         <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
-        <h3 class="product-name">{{ product.name }}</h3>
-        <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
-        <p class="product-category">{{ product.category }}</p>
-        <div class="actions">
-          <button (click)="addToCart(product)">Adicionar no Carrinho</button>
-          <button (click)="buyNow(product)">Comprar</button>
+        <div class="product-content">
+          <p class="product-category">{{ product.category }}</p>
+          <h3 class="product-name">{{ product.name }}</h3>
+          <div class="product-sizes" *ngIf="product.sizes && product.sizes.length > 0">
+            <span class="sizes-label">Tamanhos:</span>
+            <span class="size-badge" *ngFor="let size of product.sizes">{{ size }}</span>
+          </div>
+          <div class="product-price-container">
+            <span class="product-price-original" *ngIf="product.originalPrice">R$ {{ product.originalPrice.toFixed(2).replace('.', ',') }}</span>
+            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+            <p class="product-installment">ou 3x de R$ {{ (product.price / 3).toFixed(2).replace('.', ',') }}</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+              <i class="bi bi-cart-plus me-1"></i>Carrinho
+            </button>
+            <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+              <i class="bi bi-bag-check me-1"></i>Comprar
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Categoria: Vestidos -->
+  <!-- Conteúdo principal - Mostrar apenas quando não há busca ativa -->
+  <div *ngIf="!isSearching" class="main-content">
+    <h1>Catálogo de Roupas Femininas</h1>
+
+    <div class="main-carousel">
+      <div class="carousel-wrapper">
+        <div class="carousel-item" *ngFor="let image of carouselImages">
+          <img [src]="image" alt="Roupas Femininas" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Categoria: Vestidos -->
   <div class="category-section" *ngIf="dresses.length > 0">
     <h2>Vestidos</h2>
     <div class="carousel-container">
@@ -83,16 +181,24 @@
             <div class="favorite-icon" (click)="toggleFavorite(product)">
               <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
             </div>
+            <div class="product-badge">Novo</div>
             <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
-            <div class="actions">
-              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
-                <i class="bi bi-cart-plus me-1"></i>Carrinho
-              </button>
-              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
-                <i class="bi bi-bag-check me-1"></i>Comprar
-              </button>
+            <div class="product-content">
+              <p class="product-category">{{ product.category }}</p>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <div class="product-price-container">
+                <span class="product-price-original" *ngIf="product.originalPrice">R$ {{ product.originalPrice.toFixed(2).replace('.', ',') }}</span>
+                <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+                <p class="product-installment">ou 3x de R$ {{ (product.price / 3).toFixed(2).replace('.', ',') }}</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                  <i class="bi bi-cart-plus me-1"></i>Carrinho
+                </button>
+                <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                  <i class="bi bi-bag-check me-1"></i>Comprar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -126,16 +232,24 @@
             <div class="favorite-icon" (click)="toggleFavorite(product)">
               <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
             </div>
+            <div class="product-badge">Tendência</div>
             <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
-            <div class="actions">
-              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
-                <i class="bi bi-cart-plus me-1"></i>Carrinho
-              </button>
-              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
-                <i class="bi bi-bag-check me-1"></i>Comprar
-              </button>
+            <div class="product-content">
+              <p class="product-category">{{ product.category }}</p>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <div class="product-price-container">
+                <span class="product-price-original" *ngIf="product.originalPrice">R$ {{ product.originalPrice.toFixed(2).replace('.', ',') }}</span>
+                <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+                <p class="product-installment">ou 3x de R$ {{ (product.price / 3).toFixed(2).replace('.', ',') }}</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                  <i class="bi bi-cart-plus me-1"></i>Carrinho
+                </button>
+                <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                  <i class="bi bi-bag-check me-1"></i>Comprar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -169,16 +283,24 @@
             <div class="favorite-icon" (click)="toggleFavorite(product)">
               <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
             </div>
+            <div class="product-badge">Conforto</div>
             <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
-            <div class="actions">
-              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
-                <i class="bi bi-cart-plus me-1"></i>Carrinho
-              </button>
-              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
-                <i class="bi bi-bag-check me-1"></i>Comprar
-              </button>
+            <div class="product-content">
+              <p class="product-category">{{ product.category }}</p>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <div class="product-price-container">
+                <span class="product-price-original" *ngIf="product.originalPrice">R$ {{ product.originalPrice.toFixed(2).replace('.', ',') }}</span>
+                <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+                <p class="product-installment">ou 3x de R$ {{ (product.price / 3).toFixed(2).replace('.', ',') }}</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                  <i class="bi bi-cart-plus me-1"></i>Carrinho
+                </button>
+                <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                  <i class="bi bi-bag-check me-1"></i>Comprar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -212,16 +334,24 @@
             <div class="favorite-icon" (click)="toggleFavorite(product)">
               <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
             </div>
+            <div class="product-badge">Feminino</div>
             <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
-            <div class="actions">
-              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
-                <i class="bi bi-cart-plus me-1"></i>Carrinho
-              </button>
-              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
-                <i class="bi bi-bag-check me-1"></i>Comprar
-              </button>
+            <div class="product-content">
+              <p class="product-category">{{ product.category }}</p>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <div class="product-price-container">
+                <span class="product-price-original" *ngIf="product.originalPrice">R$ {{ product.originalPrice.toFixed(2).replace('.', ',') }}</span>
+                <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+                <p class="product-installment">ou 3x de R$ {{ (product.price / 3).toFixed(2).replace('.', ',') }}</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                  <i class="bi bi-cart-plus me-1"></i>Carrinho
+                </button>
+                <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                  <i class="bi bi-bag-check me-1"></i>Comprar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -255,16 +385,24 @@
             <div class="favorite-icon" (click)="toggleFavorite(product)">
               <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
             </div>
+            <div class="product-badge">Elegante</div>
             <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
-            <div class="actions">
-              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
-                <i class="bi bi-cart-plus me-1"></i>Carrinho
-              </button>
-              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
-                <i class="bi bi-bag-check me-1"></i>Comprar
-              </button>
+            <div class="product-content">
+              <p class="product-category">{{ product.category }}</p>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <div class="product-price-container">
+                <span class="product-price-original" *ngIf="product.originalPrice">R$ {{ product.originalPrice.toFixed(2).replace('.', ',') }}</span>
+                <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+                <p class="product-installment">ou 3x de R$ {{ (product.price / 3).toFixed(2).replace('.', ',') }}</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                  <i class="bi bi-cart-plus me-1"></i>Carrinho
+                </button>
+                <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                  <i class="bi bi-bag-check me-1"></i>Comprar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -298,16 +436,24 @@
             <div class="favorite-icon" (click)="toggleFavorite(product)">
               <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
             </div>
+            <div class="product-badge">Festas</div>
             <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
-            <div class="actions">
-              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
-                <i class="bi bi-cart-plus me-1"></i>Carrinho
-              </button>
-              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
-                <i class="bi bi-bag-check me-1"></i>Comprar
-              </button>
+            <div class="product-content">
+              <p class="product-category">{{ product.category }}</p>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <div class="product-price-container">
+                <span class="product-price-original" *ngIf="product.originalPrice">R$ {{ product.originalPrice.toFixed(2).replace('.', ',') }}</span>
+                <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+                <p class="product-installment">ou 3x de R$ {{ (product.price / 3).toFixed(2).replace('.', ',') }}</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                  <i class="bi bi-cart-plus me-1"></i>Carrinho
+                </button>
+                <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                  <i class="bi bi-bag-check me-1"></i>Comprar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -341,16 +487,24 @@
             <div class="favorite-icon" (click)="toggleFavorite(product)">
               <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
             </div>
+            <div class="product-badge">Esporte</div>
             <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
-            <div class="actions">
-              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
-                <i class="bi bi-cart-plus me-1"></i>Carrinho
-              </button>
-              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
-                <i class="bi bi-bag-check me-1"></i>Comprar
-              </button>
+            <div class="product-content">
+              <p class="product-category">{{ product.category }}</p>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <div class="product-price-container">
+                <span class="product-price-original" *ngIf="product.originalPrice">R$ {{ product.originalPrice.toFixed(2).replace('.', ',') }}</span>
+                <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+                <p class="product-installment">ou 3x de R$ {{ (product.price / 3).toFixed(2).replace('.', ',') }}</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                  <i class="bi bi-cart-plus me-1"></i>Carrinho
+                </button>
+                <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                  <i class="bi bi-bag-check me-1"></i>Comprar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -384,16 +538,24 @@
             <div class="favorite-icon" (click)="toggleFavorite(product)">
               <i class="bi" [class.bi-heart]="!isFavorite(product)" [class.bi-heart-fill]="isFavorite(product)" [class.favorited]="isFavorite(product)"></i>
             </div>
+            <div class="product-badge">Casual</div>
             <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
-            <div class="actions">
-              <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
-                <i class="bi bi-cart-plus me-1"></i>Carrinho
-              </button>
-              <button class="btn btn-success btn-sm" (click)="buyNow(product)">
-                <i class="bi bi-bag-check me-1"></i>Comprar
-              </button>
+            <div class="product-content">
+              <p class="product-category">{{ product.category }}</p>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <div class="product-price-container">
+                <span class="product-price-original" *ngIf="product.originalPrice">R$ {{ product.originalPrice.toFixed(2).replace('.', ',') }}</span>
+                <p class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</p>
+                <p class="product-installment">ou 3x de R$ {{ (product.price / 3).toFixed(2).replace('.', ',') }}</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-primary btn-sm" (click)="addToCart(product)">
+                  <i class="bi bi-cart-plus me-1"></i>Carrinho
+                </button>
+                <button class="btn btn-success btn-sm" (click)="buyNow(product)">
+                  <i class="bi bi-bag-check me-1"></i>Comprar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -405,6 +567,46 @@
                 title="Próximo">
           <i class="bi bi-arrow-right-circle-fill"></i>
         </button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Seção Promocional -->
+    <div class="promotional-section">
+    <div class="promotional-grid">
+      <div class="promo-card large">
+        <div class="promo-content">
+          <h3>Liquidação de Inverno</h3>
+          <p>Até 70% OFF em peças selecionadas</p>
+          <button class="promo-btn" (click)="filterByCategory('Liquidação')">Ver Ofertas</button>
+        </div>
+        <div class="promo-image">
+          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500&h=400&fit=crop&crop=center" alt="Liquidação">
+        </div>
+      </div>
+      
+      <div class="promo-card">
+        <div class="promo-content">
+          <h4>Frete Grátis</h4>
+          <p>Compras acima de R$ 150</p>
+          <span class="promo-tag">Sem custo</span>
+        </div>
+      </div>
+      
+      <div class="promo-card">
+        <div class="promo-content">
+          <h4>Parcelamento</h4>
+          <p>Em até 6x sem juros</p>
+          <span class="promo-tag">Facilidade</span>
+        </div>
+      </div>
+      
+      <div class="promo-card">
+        <div class="promo-content">
+          <h4>Novidades</h4>
+          <p>Toda semana produtos novos</p>
+          <span class="promo-tag">Trends</span>
+        </div>
       </div>
     </div>
   </div>
@@ -477,6 +679,7 @@
         <p>Frete grátis acima de R$ 150</p>
       </div>
     </div>
+  </div>
   </div>
 
 </div>

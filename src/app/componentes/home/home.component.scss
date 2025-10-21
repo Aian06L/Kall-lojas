@@ -311,8 +311,8 @@
 
 .catalog-carousel .catalog-item {
   flex: 0 0 auto;
-  width: 185px;
-  min-width: 185px;
+  width: 220px;
+  min-width: 220px;
   margin: 0 5px;
 }
 
@@ -404,122 +404,443 @@
   gap: 20px;
 }
 
-// Items do catálogo
+// Items do catálogo - Estilo Renner inspirado
 .catalog-item {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 18px 15px;
-  text-align: center;
+  border: none;
+  border-radius: 16px;
+  padding: 0;
+  text-align: left;
   background-color: #fff;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   position: relative;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.catalog-item:hover {
-  box-shadow: 0 8px 25px rgba(230, 34, 201, 0.3);
-  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  cursor: pointer;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(230, 34, 201, 0.05) 0%, rgba(230, 34, 201, 0.02) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+  
+  &:hover {
+    box-shadow: 0 12px 40px rgba(230, 34, 201, 0.2);
+    transform: translateY(-8px);
+    
+    &::before {
+      opacity: 1;
+    }
+    
+    .product-image {
+      transform: scale(1.05);
+    }
+    
+    .product-badge {
+      transform: scale(1.1);
+    }
+  }
 }
 
 .product-image {
-  max-width: 100%;
-  height: 150px;
+  width: 100%;
+  height: 200px;
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  border-radius: 16px 16px 0 0;
+  margin-bottom: 0;
+  transition: transform 0.4s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.product-content {
+  padding: 16px;
+  position: relative;
+  z-index: 3;
+}
+
+.product-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(135deg, #e622c9, #ff6b9d);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 4;
+  transition: transform 0.3s ease;
 }
 
 .product-name {
   font-weight: 600;
-  margin: 10px 0 5px;
-  color: #333;
-  font-size: 14px;
-  line-height: 1.3;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 15px;
+  line-height: 1.4;
+  min-height: 42px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.product-price {
-  color: #e622c9;
-  font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 10px;
+.product-price-container {
+  margin-bottom: 12px;
+  
+  .product-price-original {
+    color: #95a5a6;
+    font-size: 12px;
+    text-decoration: line-through;
+    margin-right: 8px;
+  }
+  
+  .product-price {
+    color: #e622c9;
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0;
+  }
+  
+  .product-installment {
+    color: #7f8c8d;
+    font-size: 11px;
+    margin-top: 2px;
+  }
 }
 
 .product-category {
-  color: #666;
-  font-size: 12px;
-  margin-bottom: 10px;
+  color: #95a5a6;
+  font-size: 11px;
+  margin-bottom: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  font-weight: 500;
 }
 
-// Ícone de favorito
+.product-sizes {
+  margin-bottom: 12px;
+  
+  .sizes-label {
+    font-size: 11px;
+    color: #7f8c8d;
+    font-weight: 600;
+    margin-right: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .size-badge {
+    display: inline-block;
+    background: #f8f9fa;
+    color: #495057;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-right: 4px;
+    margin-bottom: 2px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: #e622c9;
+      color: white;
+      border-color: #e622c9;
+    }
+  }
+}
+
+// Ícone de favorito - Estilo Renner
 .favorite-icon {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   cursor: pointer;
-  font-size: 20px;
-  color: #ccc;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.8);
   transition: all 0.3s ease;
-  z-index: 1;
+  z-index: 4;
+  background: rgba(0, 0, 0, 0.3);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  
+  &:hover {
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  i {
+    transition: all 0.3s ease;
+  }
+  
+  .favorited,
+  i.favorited {
+    color: #ff4757;
+    filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.6));
+  }
 }
 
-.favorite-icon:hover {
-  transform: scale(1.2);
-}
-
-.favorite-icon .favorited,
-.favorite-icon i.favorited {
-  color: #e622c9;
-}
-
-// Ações dos produtos
+// Ações dos produtos - Estilo Renner
 .actions {
   display: flex;
   gap: 8px;
-  justify-content: center;
-  margin-top: 10px;
+  justify-content: space-between;
+  margin-top: 0;
 }
 
 .actions .btn {
-  padding: 8px 12px;
-  font-size: 12px;
+  padding: 10px 16px;
+  font-size: 13px;
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: 25px;
   transition: all 0.3s ease;
   flex: 1;
-  max-width: 80px;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  &:hover::before {
+    left: 100%;
+  }
 }
 
 .actions .btn:hover {
-  transform: scale(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .actions .btn-primary {
-  background-color: #e622c9;
-  border-color: #e622c9;
-}
-
-.actions .btn-primary:hover {
-  background-color: #d01fb5;
-  border-color: #d01fb5;
+  background: linear-gradient(135deg, #e622c9, #ff6b9d);
+  border: none;
+  
+  &:hover {
+    background: linear-gradient(135deg, #d01fb5, #e622c9);
+    box-shadow: 0 6px 20px rgba(230, 34, 201, 0.4);
+  }
 }
 
 .actions .btn-success {
-  background-color: #28a745;
-  border-color: #28a745;
-}
-
-.actions .btn-success:hover {
-  background-color: #218838;
-  border-color: #1e7e34;
+  background: linear-gradient(135deg, #00b894, #00cec9);
+  border: none;
+  
+  &:hover {
+    background: linear-gradient(135deg, #00a085, #00b894);
+    box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+  }
 }
 
 // Seção de resultados de busca
+.search-results-container {
+  margin-bottom: 40px;
+  
+  .search-navigation {
+    margin-bottom: 20px;
+    padding: 0 20px;
+    
+    .back-btn {
+      border-color: #e622c9;
+      color: #e622c9;
+      font-weight: 600;
+      border-radius: 25px;
+      padding: 8px 20px;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background-color: #e622c9;
+        border-color: #e622c9;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(230, 34, 201, 0.3);
+      }
+      
+      i {
+        font-size: 14px;
+      }
+    }
+  }
+  
+  .search-header {
+    text-align: center;
+    margin-bottom: 30px;
+    
+    h2 {
+      color: #e622c9;
+      font-size: 28px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    
+    .search-suggestion {
+      color: #7f8c8d;
+      font-size: 16px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+      
+      .btn-link {
+        color: #e622c9;
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 1px solid transparent;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          color: #d01fb5;
+          border-bottom-color: #d01fb5;
+        }
+      }
+    }
+  }
+  
+  .search-suggestions {
+    text-align: center;
+    margin: 40px 0;
+    
+    h3 {
+      color: #2c3e50;
+      font-size: 20px;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+    
+    .suggestion-categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+      
+      .category-suggestion {
+        border-color: #e9ecef;
+        color: #6c757d;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          border-color: #e622c9;
+          color: #e622c9;
+          background-color: rgba(230, 34, 201, 0.1);
+          transform: translateY(-2px);
+        }
+        
+        i {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  
+  // Filtros de busca
+  .search-filters {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 25px 0;
+    border: 1px solid #e9ecef;
+    
+    .filters-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: end;
+      justify-content: center;
+      
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+        min-width: 200px;
+        
+        .filter-label {
+          color: #495057;
+          font-weight: 600;
+          font-size: 14px;
+          margin-bottom: 8px;
+          display: flex;
+          align-items: center;
+          
+          i {
+            color: #e622c9;
+          }
+        }
+        
+        .filter-select {
+          border: 2px solid #e9ecef;
+          border-radius: 8px;
+          padding: 8px 12px;
+          font-size: 14px;
+          transition: all 0.3s ease;
+          
+          &:focus {
+            border-color: #e622c9;
+            box-shadow: 0 0 0 0.2rem rgba(230, 34, 201, 0.25);
+            outline: none;
+          }
+          
+          &:hover {
+            border-color: #d01fb5;
+          }
+        }
+      }
+      
+      .filter-actions {
+        display: flex;
+        align-items: end;
+        
+        .clear-filters-btn {
+          border-color: #6c757d;
+          color: #6c757d;
+          border-radius: 8px;
+          padding: 8px 16px;
+          font-size: 14px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          
+          &:hover {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+          }
+          
+          i {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+
 .search-results {
   margin-bottom: 40px;
 }
@@ -542,8 +863,8 @@
   }
   
   .catalog-carousel .catalog-item {
-    width: 165px;
-    min-width: 165px;
+    width: 180px;
+    min-width: 180px;
     margin: 0 3px;
   }
   
@@ -553,7 +874,11 @@
   }
   
   .product-image {
-    height: 130px;
+    height: 160px;
+  }
+  
+  .product-content {
+    padding: 12px;
   }
   
   .carousel-nav {
@@ -858,6 +1183,125 @@
   }
 }
 
+// Seção Promocional
+.promotional-section {
+  margin: 3rem 0;
+  padding: 0 1rem;
+  
+  .promotional-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .promo-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(230, 34, 201, 0.15);
+    }
+    
+    &.large {
+      position: relative;
+      min-height: 200px;
+      background: linear-gradient(135deg, #e622c9, #ff6b9d);
+      color: white;
+      
+      .promo-content {
+        position: relative;
+        z-index: 2;
+        padding: 2rem;
+        
+        h3 {
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin-bottom: 0.5rem;
+        }
+        
+        p {
+          font-size: 1.1rem;
+          margin-bottom: 1.5rem;
+          opacity: 0.9;
+        }
+      }
+      
+      .promo-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40%;
+        height: 100%;
+        opacity: 0.3;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+    
+    .promo-content {
+      padding: 1.5rem;
+      text-align: center;
+      
+      h4 {
+        color: #2c3e50;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+    }
+    
+    .promo-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, #e622c9, #ff6b9d);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .promo-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
 // Seção de Links Adicionais
 .additional-links-section {
   margin: 4rem 0 2rem 0;
@@ -1028,6 +1472,76 @@
       
       p {
         font-size: 0.8rem;
+      }
+    }
+  }
+  
+  .search-results-container {
+    .search-navigation {
+      padding: 0 15px;
+      
+      .back-btn {
+        padding: 6px 16px;
+        font-size: 14px;
+      }
+    }
+    
+    .search-header {
+      h2 {
+        font-size: 22px;
+      }
+    }
+    
+    .search-suggestions {
+      margin: 30px 0;
+      padding: 0 15px;
+      
+      h3 {
+        font-size: 18px;
+      }
+      
+      .suggestion-categories {
+        gap: 8px;
+        
+        .category-suggestion {
+          padding: 8px 16px;
+          font-size: 13px;
+        }
+      }
+    }
+    
+    .search-filters {
+      padding: 20px 15px;
+      margin: 20px 0;
+      
+      .filters-container {
+        gap: 15px;
+        flex-direction: column;
+        align-items: stretch;
+        
+        .filter-group {
+          min-width: auto;
+          
+          .filter-label {
+            font-size: 13px;
+            margin-bottom: 6px;
+          }
+          
+          .filter-select {
+            padding: 10px;
+            font-size: 14px;
+          }
+        }
+        
+        .filter-actions {
+          justify-content: center;
+          margin-top: 10px;
+          
+          .clear-filters-btn {
+            padding: 10px 20px;
+            width: auto;
+          }
+        }
       }
     }
   }

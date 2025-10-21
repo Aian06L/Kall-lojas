@@ -4,6 +4,7 @@ import { LooksService } from '../../services/looks.service';
 import { CartService } from '../../services/cart.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Clothing } from '../../model/clothing.model';
 
 interface HeroSlide {
@@ -19,10 +20,9 @@ interface HeroSlide {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  // ViewChild para referências dos carrosseis
   @ViewChild('dressesCarousel') dressesCarousel!: ElementRef;
   @ViewChild('blousesCarousel') blousesCarousel!: ElementRef;
   @ViewChild('pantsCarousel') pantsCarousel!: ElementRef;
@@ -31,8 +31,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('partyCarousel') partyCarousel!: ElementRef;
   @ViewChild('sportCarousel') sportCarousel!: ElementRef;
   @ViewChild('casualCarousel') casualCarousel!: ElementRef;
-
-  // Carrossel Hero
   heroSlides: HeroSlide[] = [
     {
       imageUrl: 'https://www.mariafilo.com.br/_next/image?url=https://mariafilo.vtexassets.com/assets/vtex.file-manager-graphql/images/92cd92f2-6e22-4d1b-9efd-0b8e1847f9a2___8af232c851db1f381d0fe1178a1bbd4a.jpg&w=3840&q=90',
@@ -66,9 +64,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   currentSlideIndex: number = 0;
   carouselInterval: any;
-  autoSlideInterval: number = 5000; // 5 segundos
-
-  // Listas de produtos por categoria
+  autoSlideInterval: number = 5000;
   casualClothing: Clothing[] = [];
   officeClothing: Clothing[] = [];
   partyClothing: Clothing[] = [];
@@ -78,51 +74,54 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   pants: Clothing[] = [];
   blouses: Clothing[] = [];
 
-  // Dados gerais
   carouselImages: string[] = [];
   categories: string[] = [];
   filteredCatalog: Clothing[] = [];
-
-  // Estado dos carrosseis
+  isSearching: boolean = false;
+  currentSearchTerm: string = '';
+  priceFilter: string = '';
+  sizeFilter: string = '';
+  originalSearchResults: Clothing[] = [];
   carouselStates: { [key: string]: { scrollPosition: number } } = {};
-  
-  // Modal de pagamento
   showPaymentModal: boolean = false;
   currentProduct: Clothing | null = null;
 
   constructor(private clothingService: ClothingService, @Inject(LooksService) private looksService: LooksService, private cartService: CartService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    // Carregar imagens do carrossel
     this.clothingService.getCarouselImages().subscribe(images => {
       this.carouselImages = images;
     });
 
-    // Carregar categorias
     this.clothingService.getCategories().subscribe(categories => {
       this.categories = categories;
     });
 
-    // Carregar produtos por categoria
     this.loadProductsByCategory();
-
-    // Tratar parâmetros de busca
     this.route.queryParams.subscribe(params => {
       const search = params['q'];
-      if (search) {
+      if (search && search.trim() !== '') {
+        this.currentSearchTerm = search.trim();
+        this.isSearching = true;
         this.clothingService.searchClothing(search).subscribe(results => {
-          this.filteredCatalog = results;
+          this.originalSearchResults = results.map(product => ({
+            ...product,
+            sizes: this.getRandomSizes()
+          }));
+          this.filteredCatalog = [...this.originalSearchResults];
+          this.resetFilters();
         });
       } else {
-        this.clothingService.getAllClothing().subscribe(products => {
-          this.filteredCatalog = products;
-        });
+        this.currentSearchTerm = '';
+        this.isSearching = false;
+        this.filteredCatalog = [];
+        this.originalSearchResults = [];
+        this.resetFilters();
       }
     });
   }
 
   private loadProductsByCategory(): void {
-    // Carregar produtos por categoria
     this.clothingService.getClothingByCategory('Casual').subscribe(products => {
       this.casualClothing = products;
     });
@@ -157,7 +156,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toggleFavorite(product: Clothing): void {
-    // Converter Clothing para Look para compatibilidade
     const look = {
       id: product.id,
       name: product.name,
@@ -185,19 +183,48 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addToCart(product: Clothing): void {
-    this.cartService.addToCart({
+    const cartItem = {
       id: product.id,
       name: product.name,
       price: product.price,
+      originalPrice: product.originalPrice,
       quantity: 1,
-      image: product.imageUrl
-    });
-    console.log(`Added to cart: ${product.name}`);
+      image: product.imageUrl,
+      category: product.category,
+      stock: product.stock || 99, // Assumir estoque padrão se não informado
+      discount: product.originalPrice ? ((product.originalPrice - product.price) / product.originalPrice) * 100 : 0
+    };
+
+    const result = this.cartService.addToCartWithValidation(cartItem);
+    
+    if (result.success) {
+      this.showSuccessNotification(result.message);
+    } else {
+      this.showErrorNotification(result.message);
+    }
   }
 
   buyNow(product: Clothing): void {
-    this.currentProduct = product;
-    this.showPaymentModal = true;
+    // Adicionar ao carrinho primeiro
+    const cartItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      quantity: 1,
+      image: product.imageUrl,
+      category: product.category,
+      stock: product.stock || 99,
+      discount: product.originalPrice ? ((product.originalPrice - product.price) / product.originalPrice) * 100 : 0
+    };
+
+    const result = this.cartService.addToCartWithValidation(cartItem);
+    
+    if (result.success) {
+      this.router.navigate(['/compra']);
+    } else {
+      this.showErrorNotification(result.message);
+    }
   }
 
   closePaymentModal(): void {
@@ -232,43 +259,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.currentProduct ? this.currentProduct.price : 0;
   }
 
-  private showSuccessNotification(message: string): void {
-    const notification = document.createElement('div');
-    notification.className = 'purchase-notification';
-    notification.innerHTML = `
-      <i class="bi bi-check-circle-fill"></i>
-      <span>${message}</span>
-    `;
-    
-    notification.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(135deg, #28a745, #20c997);
-      color: white;
-      padding: 15px 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 99999;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 500;
-      animation: slideInRight 0.3s ease-out;
-    `;
 
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-      notification.style.animation = 'slideOutRight 0.3s ease-in';
-      setTimeout(() => {
-        if (document.body.contains(notification)) {
-          document.body.removeChild(notification);
-        }
-      }, 300);
-    }, 5000);
-  }
 
   ngAfterViewInit(): void {
     // Inicializar estado dos carrosseis
@@ -422,11 +413,153 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private filterByCategory(category: string): void {
+  filterByCategory(category: string): void {
     this.clothingService.getClothingByCategory(category).subscribe(products => {
-      this.filteredCatalog = products;
+      // Adicionar tamanhos fictícios e configurar para busca
+      this.originalSearchResults = products.map(product => ({
+        ...product,
+        sizes: this.getRandomSizes()
+      }));
+      this.filteredCatalog = [...this.originalSearchResults];
+      this.currentSearchTerm = category;
+      this.isSearching = true;
+      this.resetFilters();
       window.scrollTo({ top: 600, behavior: 'smooth' });
     });
+  }
+
+  clearSearch(): void {
+    this.currentSearchTerm = '';
+    this.isSearching = false;
+    this.filteredCatalog = [];
+    this.originalSearchResults = [];
+    this.resetFilters();
+    
+    // Navegar para a home sem parâmetros de busca
+    this.router.navigate(['/home']);
+    
+    // Scroll para o topo
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  getRandomSizes(): string[] {
+    const allSizes = ['PP', 'P', 'M', 'G', 'GG', 'XG'];
+    const numSizes = Math.floor(Math.random() * 4) + 3; // Entre 3 e 6 tamanhos
+    const shuffled = allSizes.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, numSizes);
+  }
+
+  resetFilters(): void {
+    this.priceFilter = '';
+    this.sizeFilter = '';
+  }
+
+  onPriceFilterChange(): void {
+    this.applyFilters();
+  }
+
+  onSizeFilterChange(): void {
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    let filtered = [...this.originalSearchResults];
+
+    // Filtro por tamanho
+    if (this.sizeFilter && this.sizeFilter !== '') {
+      filtered = filtered.filter(product => 
+        product.sizes && product.sizes.includes(this.sizeFilter)
+      );
+    }
+
+    // Filtro por preço
+    if (this.priceFilter && this.priceFilter !== '') {
+      switch (this.priceFilter) {
+        case 'asc':
+          filtered.sort((a, b) => a.price - b.price);
+          break;
+        case 'desc':
+          filtered.sort((a, b) => b.price - a.price);
+          break;
+        case 'under50':
+          filtered = filtered.filter(product => product.price < 50);
+          break;
+        case 'between50and100':
+          filtered = filtered.filter(product => product.price >= 50 && product.price <= 100);
+          break;
+        case 'above100':
+          filtered = filtered.filter(product => product.price > 100);
+          break;
+      }
+    }
+
+    this.filteredCatalog = filtered;
+  }
+
+  clearFilters(): void {
+    this.resetFilters();
+    this.filteredCatalog = [...this.originalSearchResults];
+  }
+
+  // Métodos de notificação
+  private showSuccessNotification(message: string): void {
+    this.createNotification(message, 'success');
+  }
+
+  private showErrorNotification(message: string): void {
+    this.createNotification(message, 'error');
+  }
+
+  private createNotification(message: string, type: 'success' | 'error'): void {
+    const notification = document.createElement('div');
+    notification.className = `cart-notification ${type}`;
+    
+    const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
+    const bgColor = type === 'success' 
+      ? 'linear-gradient(135deg, #28a745, #20c997)' 
+      : 'linear-gradient(135deg, #dc3545, #c82333)';
+    
+    notification.innerHTML = `
+      <i class="bi ${icon}"></i>
+      <span>${message}</span>
+    `;
+    
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${bgColor};
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-out;
+      max-width: 350px;
+    `;
+
+    document.body.appendChild(notification);
+
+    // Animar entrada
+    setTimeout(() => {
+      notification.style.transform = 'translateX(0)';
+    }, 100);
+
+    // Remover após 4 segundos
+    setTimeout(() => {
+      notification.style.transform = 'translateX(100%)';
+      setTimeout(() => {
+        if (document.body.contains(notification)) {
+          document.body.removeChild(notification);
+        }
+      }, 300);
+    }, 4000);
   }
 
 }

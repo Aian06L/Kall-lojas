@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
+import { User } from '../../model/user.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -19,7 +20,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isMobileMenuOpen: boolean = false;
   isLoggedIn: boolean = false;
   isProfileDropdownOpen: boolean = false;
+  searchQuery: string = '';
+  currentUser: User | null = null;
   private authSubscription: Subscription = new Subscription();
+  private userSubscription: Subscription = new Subscription();
 
   constructor(
     private router: Router, 
@@ -28,36 +32,45 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    // Subscribe to cart changes
     this.cartService.cartItems$.subscribe((items: any[]) => {
       this.cartItemCount = items.reduce((total: number, item: any) => total + item.quantity, 0);
     });
 
-    // Subscribe to authentication status
     this.authSubscription = this.authService.isAuthenticated$.subscribe((isAuth: boolean) => {
       this.isLoggedIn = isAuth;
       if (!isAuth) {
-        this.isProfileDropdownOpen = false; // Close dropdown when logged out
+        this.isProfileDropdownOpen = false;
+        this.currentUser = null;
       }
+    });
+
+    this.userSubscription = this.authService.currentUser$.subscribe((user: User | null) => {
+      this.currentUser = user;
     });
   }
 
   ngOnDestroy(): void {
     this.authSubscription.unsubscribe();
+    this.userSubscription.unsubscribe();
+  }
+
+  getUserDisplayName(): string {
+    if (!this.currentUser) return '';
+    
+    const firstName = this.currentUser.name.split(' ')[0];
+    return firstName;
   }
 
   openLoginModal() {
-    // Navigate to login route
     this.router.navigate(['/login']);
   }
 
   openRegisterModal() {
-    // Navigate to cadastro route
     this.router.navigate(['/cadastro']);
   }
 
   scrollToSection(section: string): void {
-    // Implement scrolling logic or routing here if needed
+    // Lógica de navegação se necessário
   }
 
   toggleMobileMenu(): void {
@@ -80,5 +93,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authService.logout();
     this.closeProfileDropdown();
     this.router.navigate(['/home']);
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  onSearch(): void {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/home'], { 
+        queryParams: { q: this.searchQuery.trim() } 
+      });
+      this.closeMobileMenu();
+    }
   }
 }

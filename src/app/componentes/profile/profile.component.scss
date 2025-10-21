@@ -1,0 +1,474 @@
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 80px);
+  background: #f8f9fa;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// Header do Perfil
+.profile-header {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.user-avatar {
+  i {
+    font-size: 4rem;
+    color: #e622c9;
+  }
+}
+
+.user-details {
+  h1 {
+    margin: 0;
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+
+  .user-email {
+    color: #6c757d;
+    margin: 0.25rem 0;
+    font-size: 1rem;
+  }
+
+  .user-role {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: #e3f2fd;
+    color: #1976d2;
+
+    &.admin {
+      background: linear-gradient(135deg, #e622c9, #d91e63);
+      color: white;
+    }
+  }
+}
+
+.admin-quick-access {
+  .btn-admin {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #e622c9, #d91e63);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(230, 34, 201, 0.3);
+      color: white;
+      text-decoration: none;
+    }
+  }
+}
+
+// Mensagens
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  border: 1px solid #c3e6cb;
+  border-radius: 10px;
+  color: #155724;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+
+  i {
+    font-size: 1.25rem;
+    color: #28a745;
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #f8d7da, #f1b0b7);
+  border: 1px solid #f1b0b7;
+  border-radius: 10px;
+  color: #721c24;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+
+  i {
+    font-size: 1.25rem;
+    color: #dc3545;
+  }
+}
+
+// Navegação por Tabs
+.profile-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #6c757d;
+  transition: all 0.3s ease;
+  flex: 1;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    flex: 1 1 calc(50% - 0.25rem);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  &:hover {
+    background: #f8f9fa;
+    color: #e622c9;
+  }
+
+  &.active {
+    background: linear-gradient(135deg, #e622c9, #d91e63);
+    color: white;
+    box-shadow: 0 4px 15px rgba(230, 34, 201, 0.3);
+  }
+
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+// Conteúdo das Tabs
+.profile-content {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f8f9fa;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.btn-edit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #e622c9;
+  background: transparent;
+  color: #e622c9;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #e622c9;
+    color: white;
+  }
+
+  &.editing {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: white;
+
+    &:hover {
+      background: #c82333;
+      border-color: #c82333;
+    }
+  }
+}
+
+// Formulários
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #6c757d;
+  font-size: 1rem;
+  z-index: 1;
+}
+
+input {
+  width: 100%;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+
+  &:focus {
+    outline: none;
+    border-color: #e622c9;
+    box-shadow: 0 0 0 3px rgba(230, 34, 201, 0.1);
+  }
+
+  &:read-only {
+    background: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+  }
+
+  &.error {
+    border-color: #dc3545;
+  }
+}
+
+// Grid para endereço
+.address-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  .input-group:nth-child(1) { // Rua
+    grid-column: 1 / 2;
+  }
+
+  .input-group:nth-child(2) { // Número
+    grid-column: 2 / 3;
+  }
+
+  .input-group:nth-child(3) { // Complemento
+    grid-column: 3 / 4;
+  }
+
+  .input-group:nth-child(4) { // Bairro
+    grid-column: 1 / 3;
+  }
+
+  .input-group:nth-child(5) { // Cidade
+    grid-column: 1 / 2;
+  }
+
+  .input-group:nth-child(6) { // Estado
+    grid-column: 2 / 3;
+  }
+
+  .input-group:nth-child(7) { // CEP
+    grid-column: 3 / 4;
+  }
+
+  @media (max-width: 768px) {
+    .input-group {
+      grid-column: 1 / 2 !important;
+    }
+  }
+
+  input {
+    padding-left: 1rem; // Sem ícone no endereço
+  }
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.btn-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #e622c9, #d91e63);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(230, 34, 201, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+}
+
+// Seção de Pedidos
+.orders-section {
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6c757d;
+
+    i {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: #dee2e6;
+    }
+
+    h3 {
+      color: #495057;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #e622c9, #d91e63);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(230, 34, 201, 0.3);
+        color: white;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+// Animações
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Responsivo
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1rem;
+  }
+
+  .profile-header {
+    padding: 1.5rem;
+  }
+
+  .profile-content {
+    padding: 1.5rem;
+  }
+
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .user-details h1 {
+    font-size: 1.5rem;
+  }
+
+  .tab-button {
+    flex: 1 1 calc(50% - 0.25rem);
+    font-size: 0.875rem;
+  }
+}

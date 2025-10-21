@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CartService, CartItem } from '../../services/cart.service';
 import { PagamentoComponent } from '../pagamento/pagamento.component';
 import { Subscription } from 'rxjs';
@@ -20,7 +20,7 @@ export class CarrinhoComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private router: Router) {}
 
   ngOnInit(): void {
     this.subscriptions.add(
@@ -81,7 +81,7 @@ export class CarrinhoComponent implements OnInit, OnDestroy {
 
   proceedToCheckout(): void {
     if (this.cartItems.length > 0) {
-      this.showPaymentModal = true;
+      this.router.navigate(['/compra']);
     }
   }
 

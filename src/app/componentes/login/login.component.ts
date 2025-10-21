@@ -18,6 +18,14 @@ export class LoginComponent implements OnInit {
   loginError = '';
   showSuccessMessage = false;
 
+  // Credenciais de teste
+  adminEmail = 'admin@kall.store';
+  adminPassword = 'Kall@2025!';
+  clientEmail = 'cliente@demo.com';
+  clientPassword = 'Demo123!';
+  clientEmail2 = 'joao@teste.com';
+  clientPassword2 = 'Joao123!';
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -45,20 +53,20 @@ export class LoginComponent implements OnInit {
       
       // Simulate API call
       setTimeout(() => {
-        // Demo credentials - update to match auth service
-        if (email === 'user@example.com' && password === 'password') {
-          const loginSuccess = this.authService.login(email, password);
-          if (loginSuccess) {
-            this.showSuccessMessage = true;
-            setTimeout(() => {
+        const loginResult = this.authService.login(email, password);
+        
+        if (loginResult.success) {
+          this.showSuccessMessage = true;
+          setTimeout(() => {
+            // Redirecionar baseado no tipo de usuário
+            if (loginResult.user?.role === 'admin') {
+              this.router.navigate(['/admin/dashboard']);
+            } else {
               this.router.navigate(['/home']);
-            }, 1500);
-          } else {
-            this.loginError = 'Erro interno. Tente novamente.';
-            this.isSubmitting = false;
-          }
+            }
+          }, 1500);
         } else {
-          this.loginError = 'Email ou senha incorretos. Tente: user@example.com / password';
+          this.loginError = loginResult.error || 'Email ou senha incorretos.';
           this.isSubmitting = false;
         }
       }, 1500);
@@ -108,5 +116,76 @@ export class LoginComponent implements OnInit {
     } else {
       alert('Digite um email válido para recuperar a senha.');
     }
+  }
+
+  // Métodos para as credenciais de teste
+  copyToClipboard(text: string): void {
+    if (navigator.clipboard && window.isSecureContext) {
+      // Usar a API moderna do Clipboard
+      navigator.clipboard.writeText(text).then(() => {
+        this.showToast('Copiado para a área de transferência!');
+      }).catch(err => {
+        console.error('Erro ao copiar: ', err);
+        this.fallbackCopyTextToClipboard(text);
+      });
+    } else {
+      // Fallback para navegadores mais antigos
+      this.fallbackCopyTextToClipboard(text);
+    }
+  }
+
+  private fallbackCopyTextToClipboard(text: string): void {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+      document.execCommand('copy');
+      this.showToast('Copiado para a área de transferência!');
+    } catch (err) {
+      console.error('Fallback: Erro ao copiar: ', err);
+      this.showToast('Erro ao copiar. Tente selecionar manualmente.');
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  }
+
+  fillCredentials(email: string, password: string): void {
+    this.loginForm.patchValue({
+      email: email,
+      password: password
+    });
+    this.showToast('Credenciais preenchidas!');
+  }
+
+  private showToast(message: string): void {
+    // Criar elemento de toast
+    const toast = document.createElement('div');
+    toast.className = 'credential-toast';
+    toast.innerHTML = `
+      <i class="bi bi-check-circle-fill"></i>
+      <span>${message}</span>
+    `;
+    
+    // Adicionar ao body
+    document.body.appendChild(toast);
+    
+    // Mostrar com animação
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // Remover após 3 segundos
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => {
+        if (document.body.contains(toast)) {
+          document.body.removeChild(toast);
+        }
+      }, 300);
+    }, 3000);
   }
 }

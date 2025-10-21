@@ -3,8 +3,19 @@
     <h2>Crie sua conta</h2>
     <p class="register-subtitle">Cadastre-se para ter acesso completo à nossa loja</p>
   </div>
+
+  <!-- Mensagem de sucesso -->
+  <div class="success-message" *ngIf="showSuccessMessage">
+    <i class="bi bi-check-circle-fill"></i>
+    <span>Conta criada com sucesso! Redirecionando para o login...</span>
+  </div>
   
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+    <!-- Erro geral -->
+    <div class="error-alert" *ngIf="registerError">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      {{ registerError }}
+    </div>
     <!-- Nome Completo -->
     <div class="input-group">
       <label for="name">Nome Completo</label>

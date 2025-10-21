@@ -1,0 +1,180 @@
+<div class="admin-dashboard">
+  <!-- Header do Dashboard -->
+  <div class="dashboard-header">
+    <h1>Dashboard Administrativo</h1>
+    <p class="dashboard-subtitle">Visão geral da sua loja Kall</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && stats" class="dashboard-content">
+    
+    <!-- Cards de Estatísticas -->
+    <div class="stats-grid">
+      <div class="stat-card customers">
+        <div class="stat-icon">
+          <i class="bi bi-people"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.totalCustomers }}</h3>
+          <p>Clientes Cadastrados</p>
+        </div>
+      </div>
+
+      <div class="stat-card orders">
+        <div class="stat-icon">
+          <i class="bi bi-box-seam"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.totalOrders }}</h3>
+          <p>Total de Pedidos</p>
+        </div>
+      </div>
+
+      <div class="stat-card revenue">
+        <div class="stat-icon">
+          <i class="bi bi-currency-dollar"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ formatCurrency(stats.totalRevenue) }}</h3>
+          <p>Receita Total</p>
+        </div>
+      </div>
+
+      <div class="stat-card pending">
+        <div class="stat-icon">
+          <i class="bi bi-clock"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.pendingOrders }}</h3>
+          <p>Pedidos Pendentes</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="dashboard-main">
+      
+      <!-- Pedidos Recentes -->
+      <div class="recent-orders-section">
+        <div class="section-header">
+          <h2>Pedidos Recentes</h2>
+          <a routerLink="/admin/orders" class="btn btn-outline-primary btn-sm">
+            Ver Todos <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+        
+        <div class="orders-table-container">
+          <table class="table orders-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Data</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of recentOrders">
+                <td class="order-id">#{{ order.id }}</td>
+                <td>
+                  <div class="customer-info">
+                    <strong>{{ order.customerName }}</strong>
+                    <small class="text-muted d-block">{{ order.customerEmail }}</small>
+                  </div>
+                </td>
+                <td>{{ order.createdAt | date:'dd/MM/yyyy' }}</td>
+                <td class="order-total">{{ formatCurrency(order.totalAmount) }}</td>
+                <td>
+                  <span class="status-badge" [class]="getStatusClass(order.status)">
+                    {{ getStatusText(order.status) }}
+                  </span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn btn-sm btn-outline-primary" 
+                            [routerLink]="['/admin/orders', order.id]" 
+                            title="Ver Detalhes">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div *ngIf="recentOrders.length === 0" class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>Nenhum pedido encontrado</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Produtos Mais Vendidos -->
+      <div class="top-products-section">
+        <div class="section-header">
+          <h2>Produtos Mais Vendidos</h2>
+        </div>
+        
+        <div class="products-grid">
+          <div *ngFor="let product of stats.topSellingProducts" class="product-card">
+            <div class="product-image">
+              <img [src]="product.productImage" [alt]="product.productName">
+            </div>
+            <div class="product-info">
+              <h4>{{ product.productName }}</h4>
+              <div class="product-stats">
+                <span class="quantity-sold">
+                  <i class="bi bi-box-seam me-1"></i>
+                  {{ product.totalSold }} vendidos
+                </span>
+                <span class="revenue">
+                  <i class="bi bi-currency-dollar me-1"></i>
+                  {{ formatCurrency(product.revenue) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="stats.topSellingProducts.length === 0" class="empty-state">
+          <i class="bi bi-graph-down"></i>
+          <p>Nenhum produto vendido ainda</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="quick-actions">
+      <h3>Ações Rápidas</h3>
+      <div class="actions-grid">
+        <a routerLink="/admin/orders" class="action-btn orders-btn">
+          <i class="bi bi-list-ul"></i>
+          <span>Gerenciar Pedidos</span>
+        </a>
+        <a routerLink="/admin/customers" class="action-btn customers-btn">
+          <i class="bi bi-people"></i>
+          <span>Ver Clientes</span>
+        </a>
+        <a routerLink="/admin/products" class="action-btn products-btn">
+          <i class="bi bi-box"></i>
+          <span>Gerenciar Produtos</span>
+        </a>
+        <a routerLink="/admin/reports" class="action-btn reports-btn">
+          <i class="bi bi-graph-up"></i>
+          <span>Relatórios</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>

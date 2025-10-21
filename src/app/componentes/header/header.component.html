@@ -18,6 +18,23 @@
         </ul>
     </nav>
 
+    <!-- Search Bar -->
+    <div class="search-container" [class.mobile-open]="isMobileMenuOpen">
+        <form class="search-form" (ngSubmit)="onSearch()">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    class="form-control search-input" 
+                    placeholder="Buscar produtos..." 
+                    [(ngModel)]="searchQuery"
+                    name="search">
+                <button class="btn btn-outline-secondary search-btn" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
     
     <div class="user-actions" [class.mobile-open]="isMobileMenuOpen">
         <a routerLink="/carrinho" class="btn-cart" title="Carrinho">
@@ -41,15 +58,24 @@
         <div class="profile-dropdown" *ngIf="isLoggedIn">
             <button class="btn-profile" (click)="toggleProfileDropdown()" [class.active]="isProfileDropdownOpen">
                 <i class="bi bi-person-circle"></i>
+                <span class="user-name" *ngIf="currentUser">{{ getUserDisplayName() }}</span>
             </button>
             <div class="dropdown-menu" [class.show]="isProfileDropdownOpen">
+                <!-- Admin Dashboard Link -->
+                <a *ngIf="isAdmin()" class="dropdown-item admin-link" routerLink="/admin/dashboard" (click)="closeProfileDropdown()">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Dashboard Admin
+                </a>
+                <hr *ngIf="isAdmin()" class="dropdown-divider">
+                
+                <!-- Regular User Options -->
                 <a class="dropdown-item" routerLink="/perfil" (click)="closeProfileDropdown()">
                     <i class="bi bi-person me-2"></i>
                     Minha Conta
                 </a>
-                <a class="dropdown-item" routerLink="/configuracoes" (click)="closeProfileDropdown()">
-                    <i class="bi bi-gear me-2"></i>
-                    Configurações
+                <a class="dropdown-item" routerLink="/looks" (click)="closeProfileDropdown()">
+                    <i class="bi bi-eye me-2"></i>
+                    Meus Looks
                 </a>
                 <hr class="dropdown-divider">
                 <button class="dropdown-item" (click)="logout()">

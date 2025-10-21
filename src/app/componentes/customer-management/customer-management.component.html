@@ -1,0 +1,136 @@
+<div class="customer-management">
+  <!-- Header -->
+  <div class="management-header">
+    <h1>Gerenciamento de Clientes</h1>
+    <p class="management-subtitle">Visualize e gerencie todos os clientes cadastrados</p>
+  </div>
+
+  <!-- Filtros e Busca -->
+  <div class="filters-section">
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <i class="bi bi-search search-icon"></i>
+        <input 
+          type="text" 
+          class="form-control search-input" 
+          placeholder="Buscar por nome ou email..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+        />
+      </div>
+      
+      <select 
+        class="form-select status-filter" 
+        [(ngModel)]="selectedStatus"
+        (change)="onStatusChange()"
+      >
+        <option value="all">Todos os Status</option>
+        <option value="active">Ativos</option>
+        <option value="inactive">Inativos</option>
+      </select>
+    </div>
+
+    <div class="results-info">
+      <span class="results-count">
+        {{ filteredCustomers.length }} cliente(s) encontrado(s)
+      </span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+  </div>
+
+  <!-- Tabela de Clientes -->
+  <div *ngIf="!loading" class="customers-table-container">
+    <div class="table-responsive">
+      <table class="table customers-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Email</th>
+            <th>Data de Cadastro</th>
+            <th>Status</th>
+            <th class="text-center">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let customer of getPaginatedCustomers()">
+            <td>
+              <div class="customer-info">
+                <div class="customer-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="customer-details">
+                  <strong class="customer-name">{{ customer.name }}</strong>
+                  <small class="customer-role">{{ customer.role === 'admin' ? 'Administrador' : 'Cliente' }}</small>
+                </div>
+              </div>
+            </td>
+            <td class="customer-email">{{ customer.email }}</td>
+            <td class="customer-date">{{ formatDate(customer.createdAt) }}</td>
+            <td>
+              <span class="status-badge" [class]="getStatusClass(customer.isActive)">
+                {{ getStatusText(customer.isActive) }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="action-buttons">
+                <button 
+                  class="btn btn-sm btn-outline-primary"
+                  [title]="customer.isActive ? 'Desativar Cliente' : 'Ativar Cliente'"
+                  (click)="toggleCustomerStatus(customer)"
+                >
+                  <i class="bi" [class.bi-person-dash]="customer.isActive" [class.bi-person-check]="!customer.isActive"></i>
+                </button>
+                <button 
+                  class="btn btn-sm btn-outline-info"
+                  title="Ver Detalhes"
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredCustomers.length === 0" class="empty-state">
+      <i class="bi bi-people"></i>
+      <h3>Nenhum cliente encontrado</h3>
+      <p>Não há clientes que correspondam aos filtros aplicados.</p>
+    </div>
+
+    <!-- Paginação -->
+    <div *ngIf="totalPages > 1" class="pagination-container">
+      <nav aria-label="Paginação de clientes">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="goToPage(currentPage - 1)">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+          </li>
+          
+          <li 
+            *ngFor="let page of getPageNumbers()" 
+            class="page-item" 
+            [class.active]="page === currentPage"
+          >
+            <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+          </li>
+          
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="goToPage(currentPage + 1)">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

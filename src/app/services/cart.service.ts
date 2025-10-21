@@ -5,17 +5,20 @@ export interface CartItem {
   id: number;
   name: string;
   price: number;
+  originalPrice?: number;
   quantity: number;
   image?: string;
+  size?: string;
+  color?: string;
+  category?: string;
+  stock?: number;
+  discount?: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  getItems() {
-    throw new Error('Method not implemented.');
-  }
   private cartItems = new BehaviorSubject<CartItem[]>([]);
   cartItems$ = this.cartItems.asObservable();
 
@@ -25,7 +28,17 @@ export class CartService {
   private totalPrice = new BehaviorSubject<number>(0);
   totalPrice$ = this.totalPrice.asObservable();
 
-  constructor() {}
+  private subtotal = new BehaviorSubject<number>(0);
+  subtotal$ = this.subtotal.asObservable();
+
+  private totalDiscount = new BehaviorSubject<number>(0);
+  totalDiscount$ = this.totalDiscount.asObservable();
+
+  private readonly storageKey = 'kall_cart_items';
+
+  constructor() {
+    this.loadCartFromStorage();
+  }
 
   addToCart(item: CartItem): void {
     const currentItems = this.cartItems.value;
@@ -66,16 +79,105 @@ export class CartService {
     this.updateTotals();
   }
 
-  private updateTotals(): void {
-    const currentItems = this.cartItems.value;
-    const totalQuantity = currentItems.reduce((acc, item) => acc + item.quantity, 0);
-    const totalPrice = currentItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
 
-    this.totalQuantity.next(totalQuantity);
-    this.totalPrice.next(totalPrice);
-  }
 
   getCartItems(): CartItem[] {
     return this.cartItems.value;
+  }
+
+  getItems(): CartItem[] {
+    return this.getCartItems();
+  }
+
+  getTotalQuantity(): number {
+    return this.totalQuantity.value;
+  }
+
+  getTotalPrice(): number {
+    return this.totalPrice.value;
+  }
+
+  getSubtotal(): number {
+    return this.subtotal.value;
+  }
+
+  getTotalDiscount(): number {
+    return this.totalDiscount.value;
+  }
+
+  isItemInCart(itemId: number): boolean {
+    return this.cartItems.value.some(item => item.id === itemId);
+  }
+
+  getItemQuantity(itemId: number): number {
+    const item = this.cartItems.value.find(i => i.id === itemId);
+    return item ? item.quantity : 0;
+  }
+
+  addToCartWithValidation(item: CartItem): { success: boolean; message: string } {
+    const currentItems = this.cartItems.value;
+    const existingItem = currentItems.find(i => i.id === item.id && i.size === item.size);
+    
+    if (item.stock && item.stock <= 0) {
+      return { success: false, message: 'Produto fora de estoque' };
+    }
+
+    const newQuantity = existingItem ? existingItem.quantity + item.quantity : item.quantity;
+    
+    if (item.stock && newQuantity > item.stock) {
+      return { 
+        success: false, 
+        message: `Apenas ${item.stock} unidades disponíveis` 
+      };
+    }
+
+    this.addToCart(item);
+    return { 
+      success: true, 
+      message: `${item.name} adicionado ao carrinho!` 
+    };
+  }
+
+  private loadCartFromStorage(): void {
+    try {
+      const storedCart = localStorage.getItem(this.storageKey);
+      if (storedCart) {
+        const items = JSON.parse(storedCart);
+        this.cartItems.next(items);
+        this.updateTotals();
+      }
+    } catch (error) {
+      console.error('Erro ao carregar carrinho do localStorage:', error);
+    }
+  }
+
+  private saveCartToStorage(): void {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(this.cartItems.value));
+    } catch (error) {
+      console.error('Erro ao salvar carrinho no localStorage:', error);
+    }
+  }
+
+  private updateTotals(): void {
+    const currentItems = this.cartItems.value;
+    const totalQuantity = currentItems.reduce((acc, item) => acc + item.quantity, 0);
+    const subtotal = currentItems.reduce((acc, item) => {
+      const originalPrice = item.originalPrice || item.price;
+      return acc + item.quantity * originalPrice;
+    }, 0);
+    const totalDiscount = currentItems.reduce((acc, item) => {
+      if (item.originalPrice && item.discount) {
+        return acc + item.quantity * (item.originalPrice - item.price);
+      }
+      return acc;
+    }, 0);
+    const totalPrice = currentItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
+
+    this.totalQuantity.next(totalQuantity);
+    this.subtotal.next(subtotal);
+    this.totalDiscount.next(totalDiscount);
+    this.totalPrice.next(totalPrice);
+    this.saveCartToStorage();
   }
 }
