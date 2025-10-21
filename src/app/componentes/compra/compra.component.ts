@@ -134,11 +134,21 @@ export class CompraComponent implements OnInit, OnDestroy {
         const paymentMethod = this.checkoutForm.get('paymentMethod')?.value;
         if (paymentMethod === 'credit') {
           const cardFields = ['cardNumber', 'cardHolder', 'expiryDate', 'cvv'];
-          return cardFields.every(field => {
+          const allFieldsFilled = cardFields.every(field => {
             const control = this.checkoutForm.get(field);
             return control && control.value && control.value.trim() !== '';
           });
+          
+          if (!allFieldsFilled) {
+            // Marcar campos como tocados para mostrar erro
+            cardFields.forEach(field => {
+              this.checkoutForm.get(field)?.markAsTouched();
+            });
+          }
+          
+          return allFieldsFilled;
         }
+        // Para outros métodos de pagamento (PIX, boleto), sempre é válido
         return true;
         
       default:
