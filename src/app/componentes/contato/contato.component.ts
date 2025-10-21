@@ -146,15 +146,52 @@ import { FooterComponent } from "../footer/footer.component";
                   required
                 />
                 <label for="lgpd" class="checkbox-label">
-                  <span class="required">*</span> Eu aceito os termos da <strong>Lei Geral de Proteção de Dados (LGPD)</strong>
+                  <span class="required">*</span> Eu aceito a <strong>Política de Privacidade</strong> e os <strong>Termos e Condições</strong>
                 </label>
               </div>
               <div class="lgpd-info">
-                <p>
-                  <i class="bi bi-info-circle-fill"></i>
-                  Seus dados pessoais serão utilizados exclusivamente para responder ao seu contato e não serão compartilhados com terceiros. 
-                  Você pode solicitar a exclusão dos seus dados a qualquer momento através do e-mail: <strong>privacidade&#64;kall.com.br</strong>
-                </p>
+                <div class="privacy-policy">
+                  <h4><i class="bi bi-shield-check"></i> Política de Privacidade</h4>
+                  <p>A sua privacidade é importante para nós. É política do Kall respeitar a sua privacidade em relação a qualquer informação sua que possamos coletar no site Kall, e outros sites que possuímos e operamos.</p>
+                  
+                  <p>Solicitamos informações pessoais apenas quando realmente precisamos delas para lhe fornecer um serviço. Fazemo-lo por meios justos e legais, com o seu conhecimento e consentimento. Também informamos por que estamos coletando e como será usado.</p>
+                  
+                  <p>Apenas retemos as informações coletadas pelo tempo necessário para fornecer o serviço solicitado. Quando armazenamos dados, protegemos dentro de meios comercialmente aceitáveis para evitar perdas e roubos, bem como acesso, divulgação, cópia, uso ou modificação não autorizados.</p>
+                  
+                  <p>Não compartilhamos informações de identificação pessoal publicamente ou com terceiros, exceto quando exigido por lei.</p>
+                  
+                  <p>O nosso site pode ter links para sites externos que não são operados por nós. Esteja ciente de que não temos controle sobre o conteúdo e práticas desses sites e não podemos aceitar responsabilidade por suas respectivas políticas de privacidade.</p>
+                  
+                  <p>Você é livre para recusar a nossa solicitação de informações pessoais, entendendo que talvez não possamos fornecer alguns dos serviços desejados.</p>
+                  
+                  <p>O uso continuado de nosso site será considerado como aceitação de nossas práticas em torno de privacidade e informações pessoais. Se você tiver alguma dúvida sobre como lidamos com dados do usuário e informações pessoais, entre em contacto connosco.</p>
+                  
+                  <h5>Google AdSense e Cookies</h5>
+                  <p>O serviço Google AdSense que usamos para veicular publicidade usa um cookie DoubleClick para veicular anúncios mais relevantes em toda a Web e limitar o número de vezes que um determinado anúncio é exibido para você.</p>
+                  
+                  <p>Utilizamos anúncios para compensar os custos de funcionamento deste site e fornecer financiamento para futuros desenvolvimentos. Os cookies de publicidade comportamental usados por este site foram projetados para garantir que você forneça os anúncios mais relevantes sempre que possível.</p>
+                  
+                  <h5>Compromisso do Usuário</h5>
+                  <p>O usuário se compromete a fazer uso adequado dos conteúdos e da informação que o Kall oferece no site:</p>
+                  <p>A) Não se envolver em atividades que sejam ilegais ou contrárias à boa fé e à ordem pública;</p>
+                  <p>B) Não difundir propaganda ou conteúdo de natureza racista, xenofóbica, jogos de sorte ou azar, qualquer tipo de pornografia ilegal, de apologia ao terrorismo ou contra os direitos humanos;</p>
+                  <p>C) Não causar danos aos sistemas físicos e lógicos do Kall, de seus fornecedores ou terceiros.</p>
+                  
+                  <h4><i class="bi bi-file-text"></i> Termos e Condições</h4>
+                  <p><strong>1. Termos:</strong> Ao acessar o site Kall, concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis.</p>
+                  
+                  <p><strong>2. Uso de Licença:</strong> É concedida permissão para visualização pessoal e não comercial. Não é permitido modificar, copiar para fins comerciais ou fazer engenharia reversa do software.</p>
+                  
+                  <p><strong>3. Isenção de Responsabilidade:</strong> Os materiais são fornecidos 'como estão'. O Kall não oferece garantias expressas ou implícitas.</p>
+                  
+                  <p><strong>4. Limitações:</strong> O Kall não será responsável por danos decorrentes do uso ou incapacidade de usar os materiais.</p>
+                  
+                  <p><strong>5. Precisão dos Materiais:</strong> Os materiais podem incluir erros técnicos, tipográficos ou fotográficos.</p>
+                  
+                  <p><strong>6. Links:</strong> Não somos responsáveis pelo conteúdo de sites vinculados.</p>
+                  
+                  <p class="policy-date"><strong>Esta política é efetiva a partir de 21 de Outubro de 2025.</strong></p>
+                </div>
               </div>
               <div class="error-message" *ngIf="contactForm.submitted && !contact.lgpdAccepted">
                 É obrigatório aceitar os termos da LGPD
@@ -429,6 +466,72 @@ import { FooterComponent } from "../footer/footer.component";
       color: #e91e8c;
       margin-top: 2px;
       flex-shrink: 0;
+    }
+
+    .privacy-policy {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .privacy-policy h4 {
+      color: #e91e8c;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 15px 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .privacy-policy h4:first-child {
+      margin-top: 0;
+    }
+
+    .privacy-policy h5 {
+      color: #e91e8c;
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 12px 0 8px 0;
+    }
+
+    .privacy-policy p {
+      color: #555;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin: 8px 0;
+      text-align: justify;
+    }
+
+    .policy-date {
+      font-weight: 600;
+      color: #e91e8c;
+      text-align: center;
+      margin-top: 20px;
+      padding: 10px;
+      background: rgba(233, 30, 140, 0.1);
+      border-radius: 8px;
+    }
+
+    .privacy-policy::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .privacy-policy::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+
+    .privacy-policy::-webkit-scrollbar-thumb {
+      background: #e91e8c;
+      border-radius: 3px;
+    }
+
+    .privacy-policy::-webkit-scrollbar-thumb:hover {
+      background: #d41a7e;
     }
 
     .form-actions {
